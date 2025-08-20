@@ -40,20 +40,16 @@ function ResultsContent() {
   const saveResultsToDatabase = async (resultData: any) => {
     setSaveStatus("saving");
     try {
-      const response = await fetch(getApiUrl("/api/save-results"), {
+      const response = await fetch(getApiUrl("/intake"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           quiz_responses: resultData.quiz_responses || [],
-          scoring_result: resultData.eco_score || resultData.score || {},
-          user_metadata: {
-            timestamp: new Date().toISOString(),
-            user_agent: navigator.userAgent,
-            screen_resolution: `${screen.width}x${screen.height}`,
-          },
+          items: resultData.items || [],
           session_id: resultData.session_id || `session_${Date.now()}`,
+          user_id: null,
         }),
       });
 

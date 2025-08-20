@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverEnvConfig, validateServerEnvironment } from "../../config/env";
 import { calculateEcoScoreFromQuizResponses } from "../../../lib/ecoscore";
-import { saveQuizSubmission } from "../../../lib/supabase";
+import { saveQuizSubmission } from "../../../lib/supabase-server";
 
 interface QuizResponse {
   question_id: string;

@@ -148,11 +148,11 @@ What area would you like to focus on first?`;
         user_id: "web-user-" + Date.now(),
       };
 
-      console.log("💬 Making chat API request to:", getApiUrl("/api/chat"));
+      console.log("💬 Making chat API request to:", getApiUrl("/chat"));
       console.log("📦 Request body:", requestBody);
 
       // Call backend Mistral API
-      const response = await fetch(getApiUrl("/api/chat"), {
+      const response = await fetch(getApiUrl("/chat"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -84,7 +84,7 @@ export default function EcoBeeLanding() {
       ];
 
       // Submit to backend for scoring
-      const response = await fetch(getApiUrl("/api/intake"), {
+      const response = await fetch(getApiUrl("/intake"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

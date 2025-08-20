@@ -58,7 +58,7 @@ export default function SustainabilityChatbot({ onBack }: ChatbotProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(getApiUrl("/api/chat"), {
+      const response = await fetch(getApiUrl("/chat"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

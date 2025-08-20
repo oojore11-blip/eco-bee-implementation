@@ -43,9 +43,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
   const fetchLeaderboard = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        getApiUrl("/api/leaderboard?limit=50")
-      );
+      const response = await fetch(getApiUrl("/leaderboard?limit=50"));
 
       if (!response.ok) {
         throw new Error("Failed to fetch leaderboard");

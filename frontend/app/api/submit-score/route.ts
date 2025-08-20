@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverEnvConfig, validateServerEnvironment } from "../../config/env";
-import { submitToLeaderboard } from "../../../lib/supabase";
+import { submitToLeaderboard } from "../../../lib/supabase-server";
 
 interface SubmitScoreRequest {
   user_id: string;

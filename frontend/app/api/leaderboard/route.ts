@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverEnvConfig, validateServerEnvironment } from "../../config/env";
-import { getLeaderboard } from "../../../lib/supabase";
+import { getLeaderboard } from "../../../lib/supabase-server";
 
 export async function GET(request: NextRequest) {
   try {

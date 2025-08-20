@@ -103,7 +103,7 @@ export default function Home() {
 
     try {
       // Submit to backend for scoring
-      const response = await fetch(getApiUrl("/api/intake"), {
+      const response = await fetch(getApiUrl("/intake"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -368,7 +368,7 @@ export default function Home() {
     try {
       if (userData.saveToLeaderboard && scoringResult) {
         // Submit to leaderboard
-        const response = await fetch(getApiUrl("/api/submit-score"), {
+        const response = await fetch(getApiUrl("/submit-score"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

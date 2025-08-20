@@ -162,19 +162,27 @@ export default function IntakeForm() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
   const [showBarcodeScanner, setShowBarcodeScanner] = useState(false);
-  const [showClothingBarcodeScanner, setShowClothingBarcodeScanner] = useState(false);
+  const [showClothingBarcodeScanner, setShowClothingBarcodeScanner] =
+    useState(false);
   const [productInfo, setProductInfo] = useState<any>(null);
   const [clothingProductInfo, setClothingProductInfo] = useState<any>(null);
   const [searchingProduct, setSearchingProduct] = useState(false);
-  const [searchingClothingProduct, setSearchingClothingProduct] = useState(false);
+  const [searchingClothingProduct, setSearchingClothingProduct] =
+    useState(false);
   const [lastSearchedBarcode, setLastSearchedBarcode] = useState("");
-  const [lastSearchedClothingBarcode, setLastSearchedClothingBarcode] = useState("");
-  
+  const [lastSearchedClothingBarcode, setLastSearchedClothingBarcode] =
+    useState("");
+
   // Category confirmation states
-  const [showFoodCategoryConfirmation, setShowFoodCategoryConfirmation] = useState(false);
-  const [showClothingCategoryConfirmation, setShowClothingCategoryConfirmation] = useState(false);
+  const [showFoodCategoryConfirmation, setShowFoodCategoryConfirmation] =
+    useState(false);
+  const [
+    showClothingCategoryConfirmation,
+    setShowClothingCategoryConfirmation,
+  ] = useState(false);
   const [pendingFoodProduct, setPendingFoodProduct] = useState<any>(null);
-  const [pendingClothingProduct, setPendingClothingProduct] = useState<any>(null);
+  const [pendingClothingProduct, setPendingClothingProduct] =
+    useState<any>(null);
   const router = useRouter();
 
   // Watch for barcode changes to trigger automatic search
@@ -225,13 +233,19 @@ export default function IntakeForm() {
     ) {
       // Debounce the search to avoid too many API calls
       const searchTimeout = setTimeout(() => {
-        console.log(`🔍 Auto-searching for clothing barcode: ${trimmedBarcode}`);
+        console.log(
+          `🔍 Auto-searching for clothing barcode: ${trimmedBarcode}`
+        );
         searchClothingProduct(trimmedBarcode);
       }, 1000); // Wait 1 second after user stops typing
 
       return () => clearTimeout(searchTimeout);
     }
-  }, [currentClothingBarcode, lastSearchedClothingBarcode, searchingClothingProduct]);
+  }, [
+    currentClothingBarcode,
+    lastSearchedClothingBarcode,
+    searchingClothingProduct,
+  ]);
 
   // Function to determine meal type from product category
   const determineMealType = (productInfo: any): string => {
@@ -312,7 +326,9 @@ export default function IntakeForm() {
     const materials = productInfo.materials || [];
 
     console.log(
-      `👕 Determining outfit material for category: "${category}", name: "${name}", materials: [${materials.join(", ")}]`
+      `👕 Determining outfit material for category: "${category}", name: "${name}", materials: [${materials.join(
+        ", "
+      )}]`
     );
 
     // Count synthetic vs natural materials
@@ -390,8 +406,14 @@ export default function IntakeForm() {
 
     if (productInfo) {
       // Check if category confirmation is needed for camera-detected products
-      if (productInfo.category_mismatch || (productInfo.category_confidence && productInfo.category_confidence < 0.7)) {
-        console.log(`⚠️ Category confirmation needed for camera scan - Expected: food, Detected: ${productInfo.detected_category}, Confidence: ${productInfo.category_confidence}`);
+      if (
+        productInfo.category_mismatch ||
+        (productInfo.category_confidence &&
+          productInfo.category_confidence < 0.7)
+      ) {
+        console.log(
+          `⚠️ Category confirmation needed for camera scan - Expected: food, Detected: ${productInfo.detected_category}, Confidence: ${productInfo.category_confidence}`
+        );
         setPendingFoodProduct(productInfo);
         setShowFoodCategoryConfirmation(true);
       } else {
@@ -422,19 +444,16 @@ export default function IntakeForm() {
     try {
       console.log(`🔍 Searching for product with barcode: ${trimmedBarcode}`);
 
-      const response = await fetch(
-        getApiUrl("/api/product-sustainability"),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ 
-            barcode: trimmedBarcode,
-            product_type: "food"
-          }),
-        }
-      );
+      const response = await fetch(getApiUrl("/product-sustainability"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          barcode: trimmedBarcode,
+          product_type: "food",
+        }),
+      });
 
       const result = await response.json();
 
@@ -442,8 +461,13 @@ export default function IntakeForm() {
         console.log("✅ Product found:", result.sustainability);
 
         // Check if category confirmation is needed
-        if (result.sustainability.category_mismatch || result.sustainability.category_confidence < 0.7) {
-          console.log(`⚠️ Category confirmation needed - Expected: food, Detected: ${result.sustainability.detected_category}, Confidence: ${result.sustainability.category_confidence}`);
+        if (
+          result.sustainability.category_mismatch ||
+          result.sustainability.category_confidence < 0.7
+        ) {
+          console.log(
+            `⚠️ Category confirmation needed - Expected: food, Detected: ${result.sustainability.detected_category}, Confidence: ${result.sustainability.category_confidence}`
+          );
           setPendingFoodProduct(result.sustainability);
           setShowFoodCategoryConfirmation(true);
         } else {
@@ -484,21 +508,20 @@ export default function IntakeForm() {
     setLastSearchedClothingBarcode(trimmedBarcode);
 
     try {
-      console.log(`🔍 Searching for clothing product with barcode: ${trimmedBarcode}`);
-
-      const response = await fetch(
-        getApiUrl("/api/product-sustainability"),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ 
-            barcode: trimmedBarcode,
-            product_type: "clothing"
-          }),
-        }
+      console.log(
+        `🔍 Searching for clothing product with barcode: ${trimmedBarcode}`
       );
+
+      const response = await fetch(getApiUrl("/product-sustainability"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          barcode: trimmedBarcode,
+          product_type: "clothing",
+        }),
+      });
 
       const result = await response.json();
 
@@ -506,8 +529,13 @@ export default function IntakeForm() {
         console.log("✅ Clothing product found:", result.sustainability);
 
         // Check if category confirmation is needed
-        if (result.sustainability.category_mismatch || result.sustainability.category_confidence < 0.7) {
-          console.log(`⚠️ Category confirmation needed - Expected: clothing, Detected: ${result.sustainability.detected_category}, Confidence: ${result.sustainability.category_confidence}`);
+        if (
+          result.sustainability.category_mismatch ||
+          result.sustainability.category_confidence < 0.7
+        ) {
+          console.log(
+            `⚠️ Category confirmation needed - Expected: clothing, Detected: ${result.sustainability.detected_category}, Confidence: ${result.sustainability.category_confidence}`
+          );
           setPendingClothingProduct(result.sustainability);
           setShowClothingCategoryConfirmation(true);
         } else {
@@ -558,7 +586,9 @@ export default function IntakeForm() {
       const mealType = determineMealType(pendingFoodProduct);
       if (mealType) {
         setValue("meal_type", mealType);
-        console.log(`🍽️ Auto-selected meal type after confirmation: ${mealType}`);
+        console.log(
+          `🍽️ Auto-selected meal type after confirmation: ${mealType}`
+        );
       }
     } else {
       // User says it's not a food product - clear the barcode
@@ -577,7 +607,9 @@ export default function IntakeForm() {
       const outfitMaterial = determineOutfitMaterial(pendingClothingProduct);
       if (outfitMaterial) {
         setValue("outfit_material", outfitMaterial);
-        console.log(`👕 Auto-selected outfit material after confirmation: ${outfitMaterial}`);
+        console.log(
+          `👕 Auto-selected outfit material after confirmation: ${outfitMaterial}`
+        );
       }
     } else {
       // User says it's not a clothing product - clear the barcode
@@ -619,13 +651,9 @@ export default function IntakeForm() {
     }
     try {
       // Submit the form data
-      const res = await axios.post(
-        getApiUrl("/api/intake"),
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await axios.post(getApiUrl("/intake"), formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       // Navigate to the results page with the result data
       router.push(
@@ -1056,14 +1084,25 @@ export default function IntakeForm() {
                   ✅ Clothing Product Found!
                 </h4>
                 <div className="text-sm text-green-700">
-                  <p><strong>Product:</strong> {clothingProductInfo.name}</p>
+                  <p>
+                    <strong>Product:</strong> {clothingProductInfo.name}
+                  </p>
                   {clothingProductInfo.brand && (
-                    <p><strong>Brand:</strong> {clothingProductInfo.brand}</p>
+                    <p>
+                      <strong>Brand:</strong> {clothingProductInfo.brand}
+                    </p>
                   )}
-                  {clothingProductInfo.materials && clothingProductInfo.materials.length > 0 && (
-                    <p><strong>Materials:</strong> {clothingProductInfo.materials.join(", ")}</p>
-                  )}
-                  <p><strong>Sustainability Score:</strong> {clothingProductInfo.overall_score}/100</p>
+                  {clothingProductInfo.materials &&
+                    clothingProductInfo.materials.length > 0 && (
+                      <p>
+                        <strong>Materials:</strong>{" "}
+                        {clothingProductInfo.materials.join(", ")}
+                      </p>
+                    )}
+                  <p>
+                    <strong>Sustainability Score:</strong>{" "}
+                    {clothingProductInfo.overall_score}/100
+                  </p>
                 </div>
               </div>
             )}
@@ -1087,13 +1126,20 @@ export default function IntakeForm() {
                       setShowClothingBarcodeScanner(false);
                       if (productInfo) {
                         setClothingProductInfo(productInfo);
-                        const outfitMaterial = determineOutfitMaterial(productInfo);
+                        const outfitMaterial =
+                          determineOutfitMaterial(productInfo);
                         if (outfitMaterial) {
                           setValue("outfit_material", outfitMaterial);
-                          console.log(`👕 Auto-selected outfit material from scan: ${outfitMaterial}`);
+                          console.log(
+                            `👕 Auto-selected outfit material from scan: ${outfitMaterial}`
+                          );
                         }
                       }
-                      console.log("📷 Clothing barcode detected from camera:", barcode, productInfo);
+                      console.log(
+                        "📷 Clothing barcode detected from camera:",
+                        barcode,
+                        productInfo
+                      );
                     }}
                     onClose={() => setShowClothingBarcodeScanner(false)}
                     productType="clothing"
@@ -1455,10 +1501,20 @@ export default function IntakeForm() {
                   We found a product, but we're not sure if it's a food item:
                 </p>
                 <div className="bg-gray-50 p-3 rounded-lg text-left">
-                  <p><strong>Product:</strong> {pendingFoodProduct.name}</p>
-                  <p><strong>Brand:</strong> {pendingFoodProduct.brand}</p>
-                  <p><strong>AI detected category:</strong> {pendingFoodProduct.detected_category}</p>
-                  <p><strong>Confidence:</strong> {Math.round(pendingFoodProduct.category_confidence * 100)}%</p>
+                  <p>
+                    <strong>Product:</strong> {pendingFoodProduct.name}
+                  </p>
+                  <p>
+                    <strong>Brand:</strong> {pendingFoodProduct.brand}
+                  </p>
+                  <p>
+                    <strong>AI detected category:</strong>{" "}
+                    {pendingFoodProduct.detected_category}
+                  </p>
+                  <p>
+                    <strong>Confidence:</strong>{" "}
+                    {Math.round(pendingFoodProduct.category_confidence * 100)}%
+                  </p>
                 </div>
                 <p className="text-gray-600 mt-3">
                   Is this actually a <strong>food or beverage</strong> product?
@@ -1493,16 +1549,31 @@ export default function IntakeForm() {
               </h3>
               <div className="mb-4">
                 <p className="text-gray-600 mb-2">
-                  We found a product, but we're not sure if it's a clothing item:
+                  We found a product, but we're not sure if it's a clothing
+                  item:
                 </p>
                 <div className="bg-gray-50 p-3 rounded-lg text-left">
-                  <p><strong>Product:</strong> {pendingClothingProduct.name}</p>
-                  <p><strong>Brand:</strong> {pendingClothingProduct.brand}</p>
-                  <p><strong>AI detected category:</strong> {pendingClothingProduct.detected_category}</p>
-                  <p><strong>Confidence:</strong> {Math.round(pendingClothingProduct.category_confidence * 100)}%</p>
+                  <p>
+                    <strong>Product:</strong> {pendingClothingProduct.name}
+                  </p>
+                  <p>
+                    <strong>Brand:</strong> {pendingClothingProduct.brand}
+                  </p>
+                  <p>
+                    <strong>AI detected category:</strong>{" "}
+                    {pendingClothingProduct.detected_category}
+                  </p>
+                  <p>
+                    <strong>Confidence:</strong>{" "}
+                    {Math.round(
+                      pendingClothingProduct.category_confidence * 100
+                    )}
+                    %
+                  </p>
                 </div>
                 <p className="text-gray-600 mt-3">
-                  Is this actually a <strong>clothing or textile</strong> product?
+                  Is this actually a <strong>clothing or textile</strong>{" "}
+                  product?
                 </p>
               </div>
               <div className="flex gap-3 justify-center">
