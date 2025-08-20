@@ -1,12 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
+import { envConfig, validateEnvironment } from "../../config/env";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { quiz_responses, items, session_id, user_id } = body;
 
+    // Validate environment configuration
+    const envValidation = validateEnvironment();
+
+    if (!envValidation.isValid) {
+      console.warn(`Environment validation failed: ${envValidation.message}`);
+      const mockScoringResult = createMockScoringResult(quiz_responses);
+      return NextResponse.json({
+        success: true,
+        scoring_result: mockScoringResult,
+        message:
+          "Quiz processed successfully (mock data - API keys not configured)",
+        warning: envValidation.message,
+      });
+    }
+
     // For now, create a mock scoring result
-    // Later, you can integrate with Mistral API and Supabase here
+    // Later, you can integrate with Mistral API and Supabase here using envConfig
     const mockScoringResult = createMockScoringResult(quiz_responses);
 
     return NextResponse.json({

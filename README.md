@@ -12,9 +12,10 @@
 
 # Note:
 
-backend runs on localhost:8000
-frontend runs on localhost:3000
-paste your key in the .env.local file in backend
+- Backend runs on localhost:8000
+- Frontend runs on localhost:3000
+- All environment variables must start with `NEXT_PUBLIC_` to be accessible in the frontend
+- Never commit .env.local files to git
 
 # CAUTION
 

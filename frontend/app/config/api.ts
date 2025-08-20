@@ -1,10 +1,10 @@
+import { envConfig } from "./env";
+
 // Environment configuration for API base URL
 export const config = {
-  apiBaseUrl:
-    process.env.NEXT_PUBLIC_API_BASE ||
-    (process.env.NODE_ENV === "production" ? "" : "http://localhost:8000"),
-  isDevelopment: process.env.NODE_ENV === "development",
-  isProduction: process.env.NODE_ENV === "production",
+  apiBaseUrl: envConfig.apiBaseUrl,
+  isDevelopment: envConfig.isDevelopment,
+  isProduction: envConfig.isProduction,
 };
 
 // Helper function to get API URL
