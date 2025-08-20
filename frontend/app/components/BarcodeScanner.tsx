@@ -161,45 +161,63 @@ export default function BarcodeScanner({
   );
 
   const scanImage = async (imageBlob: Blob) => {
+    console.log('🔍 Starting barcode scan with blob:', imageBlob);
     try {
       // Convert blob to base64 for API
       const base64Data = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
+        reader.onload = () => {
+          console.log('📄 File converted to base64, length:', (reader.result as string).length);
+          resolve(reader.result as string);
+        };
+        reader.onerror = (error) => {
+          console.error('❌ FileReader error:', error);
+          reject(error);
+        };
         reader.readAsDataURL(imageBlob);
       });
+      
+      const requestBody = {
+        image_data: base64Data,
+        camera_input: true,
+        product_type: productType,
+      };
+      
+      console.log('🚀 Making API request to:', getApiUrl("/api/scan-barcode"));
+      console.log('📦 Request body keys:', Object.keys(requestBody));
       
       const response = await fetch(getApiUrl("/api/scan-barcode"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          image_data: base64Data,
-          camera_input: true,
-          product_type: productType,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
+      console.log('📡 API Response status:', response.status, response.statusText);
+      
       if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+        const errorText = await response.text();
+        console.error('❌ API Error Response:', errorText);
+        throw new Error(`API request failed: ${response.status} - ${errorText}`);
       }
 
       const result: BarcodeResult = await response.json();
-      console.log("BarcodeScanner received result:", result);
+      console.log('✅ BarcodeScanner received result:', result);
       setResult(result);
 
       if (result.success && result.barcode) {
-        console.log("Calling onBarcodeDetected with:", {
+        console.log('🎯 Success! Calling onBarcodeDetected with:', {
           barcode: result.barcode,
           productInfo: result.product_info,
           fullResult: result,
         });
         onBarcodeDetected(result.barcode, result.product_info, result);
+      } else {
+        console.warn('⚠️ Barcode scan was not successful:', result);
       }
     } catch (error) {
-      console.error("Error scanning barcode:", error);
+      console.error("❌ Error scanning barcode:", error);
       setResult({
         success: false,
         barcode: null,

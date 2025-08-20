@@ -142,32 +142,39 @@ What area would you like to focus on first?`;
         )}`;
       }
 
+      const requestBody = {
+        message: text.trim(),
+        context: context,
+        user_id: "web-user-" + Date.now(),
+      };
+
+      console.log('💬 Making chat API request to:', getApiUrl("/api/chat"));
+      console.log('📦 Request body:', requestBody);
+
       // Call backend Mistral API
       const response = await fetch(getApiUrl("/api/chat"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          message: text.trim(),
-          context: context,
-          user_id: "web-user-" + Date.now(), // Add required user_id field
-        }),
+        body: JSON.stringify(requestBody),
       });
 
+      console.log('📡 Chat API Response status:', response.status, response.statusText);
+
       if (!response.ok) {
-        console.error(`API request failed: ${response.status} ${response.statusText}`);
         const errorText = await response.text();
-        console.error('API error response:', errorText);
-        throw new Error(`API request failed: ${response.status}`);
+        console.error(`❌ API request failed: ${response.status} ${response.statusText}`);
+        console.error('❌ API error response:', errorText);
+        throw new Error(`API request failed: ${response.status} - ${errorText}`);
       }
 
       const result = await response.json();
-      console.log('Chat API response:', result);
+      console.log('✅ Chat API response:', result);
 
       // Check if the API response has the expected format
       if (!result.success) {
-        console.error('API returned success=false:', result);
+        console.error('❌ API returned success=false:', result);
         throw new Error(result.error || 'API returned unsuccessful response');
       }
 
@@ -182,7 +189,7 @@ What area would you like to focus on first?`;
 
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      console.error("Error calling chat API:", error);
+      console.error("❌ Error calling chat API:", error);
 
       // Fallback to local response if API fails
       const fallbackResponse = generateFallbackResponse(text.trim());
