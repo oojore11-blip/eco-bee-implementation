@@ -7,6 +7,7 @@ import Leaderboard from "./components/Leaderboard";
 import SustainabilityChatbot from "./components/SustainabilityChatbot";
 import ChatbotInterface from "./components/ChatbotInterface";
 import UserInfoCollection from "./components/UserInfoCollection";
+import BarcodeScanner from "./components/BarcodeScanner";
 import { QuizResponse } from "./types/quiz";
 import { getApiUrl } from "./config/api";
 import { BrandHeader, Bee, FeatureCard } from "./components/ui";
@@ -28,7 +29,8 @@ type AppState =
   | "userinfo"
   | "results"
   | "leaderboard"
-  | "chatbot";
+  | "chatbot"
+  | "barcode-scanner";
 
 interface ScoringResult {
   items: any[];
@@ -64,11 +66,26 @@ export default function Home() {
   } | null>(null);
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>("");
+  const [barcodeResult, setBarcodeResult] = useState<any>(null);
 
   // Generate session ID on client side to prevent hydration mismatch
   useEffect(() => {
     setSessionId(generateSessionId());
   }, []);
+
+  const handleBarcodeDetected = (barcode: string, productInfo: any, fullResult?: any) => {
+    console.log('📱 Barcode detected in main app:', { barcode, productInfo, fullResult });
+    setBarcodeResult(fullResult || { barcode, productInfo });
+    // For now, just close the scanner. We could add a results view later
+    setAppState("welcome");
+    
+    // Show a simple alert with the product info
+    if (fullResult?.product_info?.name) {
+      alert(`Product found: ${fullResult.product_info.name}\nBarcode: ${barcode}`);
+    } else {
+      alert(`Barcode scanned: ${barcode}`);
+    }
+  };
 
   const handleQuizComplete = async (
     responses: QuizResponse[],
@@ -271,14 +288,14 @@ export default function Home() {
             icon={<FaBarcode />}
             title="Product Scanner"
             description="Scan barcodes to get instant sustainability insights and eco-friendly alternatives"
-            onClick={() => setAppState("quiz")}
+            onClick={() => setAppState("barcode-scanner")}
           />
 
           <FeatureCard
             icon={<FaCamera />}
             title="Image Recognition"
             description="Take photos of food or clothing items to get personalized environmental impact analysis"
-            onClick={() => setAppState("quiz")}
+            onClick={() => setAppState("barcode-scanner")}
           />
 
           <FeatureCard
@@ -430,6 +447,14 @@ export default function Home() {
             />
           </div>
         </main>
+      );
+    case "barcode-scanner":
+      return (
+        <BarcodeScanner
+          onBarcodeDetected={handleBarcodeDetected}
+          onClose={() => setAppState("welcome")}
+          productType="food"
+        />
       );
     default:
       return renderWelcome();

@@ -1,35 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverEnvConfig, validateServerEnvironment } from "../../config/env";
+import { calculateEcoScoreFromQuizResponses } from "../../../lib/ecoscore";
+import { saveQuizSubmission } from "../../../lib/supabase";
+
+interface QuizResponse {
+  question_id: string;
+  question_text: string;
+  answer: string | string[];
+  category: string;
+}
+
+interface IntakeRequest {
+  quiz_responses: QuizResponse[];
+  items?: any[];
+  session_id?: string;
+  user_id?: string | null;
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { quiz_responses, items, session_id, user_id } = body;
+    const body: IntakeRequest = await request.json();
+    const { quiz_responses, items = [], session_id, user_id } = body;
 
     // Validate environment configuration
     const envValidation = validateServerEnvironment();
-
+    
     if (!envValidation.isValid) {
       console.warn(`Environment validation failed: ${envValidation.message}`);
-      const mockScoringResult = createMockScoringResult(quiz_responses);
+      // Still provide functionality even without full API configuration
+      const scoringResult = calculateEcoScoreFromQuizResponses(quiz_responses);
       return NextResponse.json({
         success: true,
-        scoring_result: mockScoringResult,
-        message:
-          "Quiz processed successfully (mock data - API keys not configured)",
+        scoring_result: scoringResult,
+        message: "Quiz processed successfully (limited functionality - API keys not configured)",
         warning: envValidation.message,
       });
     }
 
-    // Create scoring result
-    const scoringResult = createMockScoringResult(quiz_responses);
-    
-    // TODO: Add Supabase integration here
-    // You can use serverEnvConfig.supabaseUrl and serverEnvConfig.supabaseKey
-    // to connect to Supabase and store the quiz results
-    
-    console.log('Quiz data received:', { quiz_responses, items, session_id, user_id });
-    console.log('Scoring result:', scoringResult);
+    // Calculate EcoScore using real planetary boundaries algorithm
+    const scoringResult = calculateEcoScoreFromQuizResponses(quiz_responses);
+
+    // Save to database if session info provided
+    if (session_id) {
+      try {
+        await saveQuizSubmission({
+          user_id: user_id || `session_${session_id}`,
+          session_id,
+          quiz_responses,
+          scoring_result: scoringResult,
+        });
+      } catch (dbError) {
+        console.error('Database save error:', dbError);
+        // Continue even if database save fails
+      }
+    }
+
+    console.log('Quiz processed successfully:', { 
+      session_id, 
+      score: scoringResult.composite, 
+      grade: scoringResult.grade 
+    });
 
     return NextResponse.json({
       success: true,
@@ -46,85 +76,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-function createMockScoringResult(responses: any[]) {
-  // Simple scoring based on responses
-  let totalScore = 50; // baseline
-
-  responses.forEach((response) => {
-    if (response.question_id === "food_today") {
-      switch (response.answer) {
-        case "plant-based":
-          totalScore -= 20;
-          break;
-        case "mixed":
-          totalScore -= 5;
-          break;
-        case "meat-heavy":
-          totalScore += 15;
-          break;
-        case "packaged":
-          totalScore += 10;
-          break;
-      }
-    }
-    if (response.question_id === "transport_today") {
-      switch (response.answer) {
-        case "walk":
-        case "bike":
-          totalScore -= 15;
-          break;
-        case "public":
-          totalScore -= 5;
-          break;
-        case "electric":
-          totalScore += 5;
-          break;
-        case "car":
-          totalScore += 20;
-          break;
-      }
-    }
-  });
-
-  totalScore = Math.max(0, Math.min(100, totalScore));
-
-  // Use deterministic values to prevent hydration mismatch
-  const boundaryScores = {
-    climate: Math.max(0, Math.min(100, totalScore + 2)),
-    biosphere: Math.max(0, Math.min(100, totalScore - 3)),
-    biogeochemical: Math.max(0, Math.min(100, totalScore + 1)),
-    freshwater: Math.max(0, Math.min(100, totalScore - 2)),
-    aerosols: Math.max(0, Math.min(100, totalScore + 3)),
-  };
-
-  return {
-    items: [],
-    per_boundary_averages: boundaryScores,
-    composite: totalScore,
-    grade:
-      totalScore <= 30
-        ? "A"
-        : totalScore <= 50
-        ? "B"
-        : totalScore <= 70
-        ? "C"
-        : "D",
-    recommendations: [
-      {
-        action: "Choose more plant-based meals",
-        impact: "Reduce climate impact by 50%",
-        boundary: "Climate Change",
-        current_score: boundaryScores.climate,
-      },
-      {
-        action: "Use public transport or walk more",
-        impact: "Lower your carbon footprint",
-        boundary: "Climate Change",
-        current_score: boundaryScores.climate,
-      },
-    ],
-    boundary_details: {},
-  };
 }
