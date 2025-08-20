@@ -172,8 +172,8 @@ export default function EcoScoreDisplay({
         <div className="glass overflow-hidden relative">
           {/* Fixed Floating Score Circle - Top Right */}
           <div className="absolute top-4 right-4 z-10 glass-card-inner rounded-full p-2">
-            <div className="relative" style={{ width: 80, height: 80 }}>
-              <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100" width="80" height="80">
+            <div className="relative" style={{ width: 128, height: 128 }}>
+              <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100" width="128" height="128">
                 {/* Background circle */}
                 <circle
                   cx="50"
