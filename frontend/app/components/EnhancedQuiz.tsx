@@ -459,15 +459,15 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
   }
 
   return (
-    <Card className="max-w-2xl mx-auto">
+    <Card className="max-w-3xl mx-auto ml-8">
       {/* Header with bee mascot */}
-      <div className="glass-header p-6 border-b border-white/10">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <Bee size={32} />
-            <h1 className="text-xl font-semibold text-white">EcoBee Quiz</h1>
+      <div className="glass-header p-6 border-b border-white/10 quiz-header-container">
+        <div className="quiz-header-top">
+          <div className="quiz-header-brand">
+            <div className="icon-badge"><span>🐝</span></div>
+            <h1 className="text-xl neon-title">EcoBee Quiz</h1>
           </div>
-          <span className="text-sm text-white/70">{progress}% Complete</span>
+          {/* right side intentionally left clean for a calmer header */}
         </div>
 
         {/* Progress bar */}
@@ -478,17 +478,21 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
           />
         </div>
 
-        <div className="mt-2 text-sm text-white/60">
-          Question {quizState.currentQuestionIndex + 1} of{" "}
-          {QUIZ_QUESTIONS.length}
+        {/* Compact metrics row with comfortable spacing */}
+        <div className="mt-3 text-sm text-white/70 quiz-metrics">
+          <span>{progress}% Complete</span>
+          <span className="w-1 h-1 rounded-full bg-white/30" />
+          <span>
+            Question {quizState.currentQuestionIndex + 1} of {QUIZ_QUESTIONS.length}
+          </span>
         </div>
       </div>
 
       {/* Question content */}
-      <div className="p-8">
-        <div className="flex items-center space-x-3 mb-6">
-          {getCategoryIcon(currentQuestion.category)}
-          <h2 className="text-xl font-bold text-white">
+      <div className="p-8 pl-16">
+        <div className="quiz-question-header">
+          <div className="icon-badge">{getCategoryIcon(currentQuestion.category)}</div>
+          <h2 className="text-2xl neon-title quiz-question-title">
             {currentQuestion.text}
           </h2>
         </div>
@@ -619,17 +623,17 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
         {/* Special features for certain questions */}
         {(currentQuestion.category === "food" ||
           currentQuestion.category === "clothing") && (
-          <div className="flex space-x-3 mb-6">
+          <div className="quiz-button-container">
             <button
               onClick={() => setShowBarcode(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+              className="btn"
             >
               <FaImage />
               <span>Scan Barcode</span>
             </button>
             <button
               onClick={() => setShowImageCapture(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors"
+              className="btn"
             >
               <FaImage />
               <span>Take Photo</span>
@@ -648,13 +652,11 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
         )}
 
         {/* Navigation buttons */}
-        <div className="flex justify-between mt-8">
+        <div className="quiz-navigation">
           <button
             onClick={handlePrevious}
             disabled={quizState.currentQuestionIndex === 0}
-            className={`btn quiz-nav-btn ${
-              quizState.currentQuestionIndex === 0 ? "" : ""
-            }`}
+            className="btn"
           >
             <FaArrowLeft />
             <span>Previous</span>
@@ -665,13 +667,7 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
             disabled={!currentAnswer || 
                      (Array.isArray(currentAnswer) && currentAnswer.length === 0) ||
                      (typeof currentAnswer === 'string' && currentAnswer.trim() === '')}
-            className={`btn${
-              !currentAnswer || 
-              (Array.isArray(currentAnswer) && currentAnswer.length === 0) ||
-              (typeof currentAnswer === 'string' && currentAnswer.trim() === '')
-                ? ""
-                : "-primary"
-            } quiz-nav-btn`}
+            className="btn btn-primary"
           >
             <span>{isLastQuestion ? "Complete" : "Next"}</span>
             <FaArrowRight />
@@ -681,15 +677,27 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
 
       {/* Barcode scanner modal */}
       {showBarcode && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
-            <BarcodeScanner
-              onBarcodeDetected={handleBarcodeCapture}
-              onClose={() => setShowBarcode(false)}
-              productType={
-                currentQuestion.category === "food" ? "food" : "clothing"
-              }
-            />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="glass rounded-2xl max-w-md w-full overflow-hidden">
+            <div className="glass-header p-4 border-b border-white/10">
+              <div className="flex items-center justify-end">
+                <button
+                  onClick={() => setShowBarcode(false)}
+                  className="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <BarcodeScanner
+                onBarcodeDetected={handleBarcodeCapture}
+                onClose={() => setShowBarcode(false)}
+                productType={
+                  currentQuestion.category === "food" ? "food" : "clothing"
+                }
+              />
+            </div>
           </div>
         </div>
       )}
