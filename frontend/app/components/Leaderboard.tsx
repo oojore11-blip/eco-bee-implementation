@@ -107,7 +107,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center">
-        <div className="max-w-md mx-auto bg-white shadow-xl rounded-2xl p-8 text-center">
+        <div className="max-w-md mx-auto c4d-card text-center">
           <div className="text-red-500 text-4xl mb-4">⚠️</div>
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Error Loading Leaderboard
@@ -115,7 +115,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={onBack}
-            className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors"
+            className="btn-primary"
           >
             Go Back
           </button>
@@ -128,7 +128,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="bg-white shadow-xl rounded-2xl mb-6 overflow-hidden">
+        <div className="c4d-card mb-6 overflow-hidden">
           <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -190,7 +190,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
         </div>
 
         {/* Leaderboard */}
-        <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
+        <div className="c4d-card overflow-hidden">
           <div className="p-6">
             <h2 className="text-xl font-bold text-gray-800 mb-4">
               Top Performers
@@ -261,7 +261,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
         <div className="text-center mt-6">
           <button
             onClick={onBack}
-            className="bg-green-500 text-white px-8 py-3 rounded-xl font-semibold hover:bg-green-600 transition-colors shadow-lg"
+            className="cta"
           >
             Back to Home
           </button>

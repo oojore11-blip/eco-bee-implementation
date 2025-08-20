@@ -667,7 +667,7 @@ export default function IntakeForm() {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow-xl rounded-2xl p-8 mt-8 animate-fade-in">
+    <div className="max-w-xl mx-auto c4d-card animate-fade-in mt-8">
       <div className="flex items-center mb-6">
         <FaLeaf className="text-green-600 text-3xl mr-2" />
         <h2 className="text-2xl font-bold tracking-tight">

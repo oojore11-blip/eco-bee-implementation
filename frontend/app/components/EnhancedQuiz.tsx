@@ -330,10 +330,8 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
               <button
                 key={option.value}
                 onClick={() => handleAnswerChange(option.value)}
-                className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ${
-                  currentAnswer === option.value
-                    ? "border-green-500 bg-green-50 text-green-800"
-                    : "border-gray-200 bg-white hover:border-green-300 hover:bg-green-25"
+                className={`option-button ${
+                  currentAnswer === option.value ? "selected" : ""
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -411,7 +409,7 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
               <span>{currentQuestion.scaleLabels?.[0]}</span>
               <span>{currentQuestion.scaleLabels?.[1]}</span>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="scale-options-container">
               {Array.from(
                 { length: currentQuestion.scaleMax || 5 },
                 (_, i) => i + 1
@@ -419,10 +417,8 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
                 <button
                   key={value}
                   onClick={() => handleAnswerChange(value)}
-                  className={`w-12 h-12 rounded-full border-2 font-semibold transition-all duration-200 ${
-                    currentAnswer === value
-                      ? "border-green-500 bg-green-500 text-white"
-                      : "border-gray-300 bg-white hover:border-green-400"
+                  className={`scale-option ${
+                    currentAnswer === value ? "selected" : ""
                   }`}
                 >
                   {value}
@@ -440,7 +436,7 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
               onChange={(e) => handleAnswerChange(e.target.value)}
               placeholder={currentQuestion.placeholder}
               rows={4}
-              className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none resize-none"
+              className="glass-input w-full p-4 rounded-xl resize-none"
             />
           </div>
         );
@@ -452,7 +448,7 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
 
   if (quizState.isComplete) {
     return (
-      <div className="max-w-2xl mx-auto bg-white shadow-xl rounded-2xl p-8 text-center">
+      <div className="max-w-2xl mx-auto c4d-card text-center">
         <div className="text-6xl mb-4">🌱</div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Quiz Complete!
@@ -660,10 +656,8 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
           <button
             onClick={handlePrevious}
             disabled={quizState.currentQuestionIndex === 0}
-            className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-              quizState.currentQuestionIndex === 0
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            className={`btn ${
+              quizState.currentQuestionIndex === 0 ? "" : ""
             }`}
           >
             <FaArrowLeft />
@@ -675,12 +669,12 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
             disabled={!currentAnswer || 
                      (Array.isArray(currentAnswer) && currentAnswer.length === 0) ||
                      (typeof currentAnswer === 'string' && currentAnswer.trim() === '')}
-            className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+            className={`${
               !currentAnswer || 
               (Array.isArray(currentAnswer) && currentAnswer.length === 0) ||
               (typeof currentAnswer === 'string' && currentAnswer.trim() === '')
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-green-600 text-white hover:bg-green-700"
+                ? "btn"
+                : "btn-primary"
             }`}
           >
             <span>{isLastQuestion ? "Complete" : "Next"}</span>
