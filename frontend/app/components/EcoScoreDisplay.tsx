@@ -186,54 +186,53 @@ export default function EcoScoreDisplay({
           {/* Fixed Floating Score Circle - Top Right */}
           <div className="absolute top-4 right-4 z-10 glass-card-inner rounded-full p-2">
             <div className="relative" style={{ width: RING_SIZE_PX, height: RING_SIZE_PX }}>
-              <svg className="w-36 h-36 transform -rotate--90" viewBox="0 0 100 100" width={RING_SIZE_PX} height={RING_SIZE_PX}>
-                {/* Background circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={RING_RADIUS}
-                  stroke="rgba(71, 85, 105, 0.3)"
-                  strokeWidth={RING_STROKE}
-                  fill="none"
-                />
-                {/* Score circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={RING_RADIUS}
-                  stroke={
-                    scoringResult.composite <= 30
-                      ? "#10b981"
-                      : scoringResult.composite <= 60
-                      ? "#f59e0b"
-                      : "#ef4444"
-                  }
-                  strokeWidth={RING_STROKE}
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeDasharray={
-                    createRadialScore(100 - scoringResult.composite).strokeDasharray
-              }
-              strokeDashoffset={
-                createRadialScore(100 - scoringResult.composite)
-                  .strokeDashoffset
-              }
-              className="transition-all duration-1000"
-            />
-            {/* Centered score text inside SVG */}
-            <g transform="rotate(90, 50, 50)">
-              <text
-                x="50"
-                y="50"
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="#ffffff"
-                fontWeight="800"
-                fontSize={getSvgFontSize(displayScore)}
-              >
-                {displayScore}
-              </text>
-            </g>
+              <svg className="w-36 h-36" viewBox="0 0 100 100" width={RING_SIZE_PX} height={RING_SIZE_PX}>
+                <g transform="rotate(-90, 50, 50)">
+                  {/* Background circle */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r={RING_RADIUS}
+                    stroke="rgba(71, 85, 105, 0.3)"
+                    strokeWidth={RING_STROKE}
+                    fill="none"
+                  />
+                  {/* Score circle */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r={RING_RADIUS}
+                    stroke={
+                      scoringResult.composite <= 30
+                        ? "#10b981"
+                        : scoringResult.composite <= 60
+                        ? "#f59e0b"
+                        : "#ef4444"
+                    }
+                    strokeWidth={RING_STROKE}
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray={
+                      createRadialScore(100 - scoringResult.composite).strokeDasharray
+                    }
+                    strokeDashoffset={
+                      createRadialScore(100 - scoringResult.composite).strokeDashoffset
+                    }
+                    className="transition-all duration-1000"
+                  />
+                </g>
+                {/* Centered score text inside SVG (upright) */}
+                <text
+                  x="50"
+                  y="50"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fill="#ffffff"
+                  fontWeight="800"
+                  fontSize={getSvgFontSize(displayScore)}
+                >
+                  {displayScore}
+                </text>
           </svg>
         </div>
         <div
@@ -382,3 +381,4 @@ export default function EcoScoreDisplay({
     </div>
   );
 }
+
