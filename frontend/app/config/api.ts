@@ -1,10 +1,10 @@
-import { envConfig } from "./env";
+import { clientEnvConfig } from "./env";
 
-// Environment configuration for API base URL
+// Environment configuration for API base URL (client-safe)
 export const config = {
-  apiBaseUrl: envConfig.apiBaseUrl,
-  isDevelopment: envConfig.isDevelopment,
-  isProduction: envConfig.isProduction,
+  apiBaseUrl: clientEnvConfig.apiBaseUrl,
+  isDevelopment: clientEnvConfig.isDevelopment,
+  isProduction: clientEnvConfig.isProduction,
 };
 
 // Helper function to get API URL

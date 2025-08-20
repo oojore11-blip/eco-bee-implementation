@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { envConfig, validateEnvironment } from "../../config/env";
+import { serverEnvConfig, validateServerEnvironment } from "../../config/env";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const { message, context, user_id } = body;
 
     // Validate environment configuration
-    const envValidation = validateEnvironment();
+    const envValidation = validateServerEnvironment();
     
     if (!envValidation.isValid) {
       return NextResponse.json({
@@ -17,13 +17,13 @@ export async function POST(request: NextRequest) {
       }, { status: 500 });
     }
 
-    // Call Mistral API
+    // Call Mistral API using server-side environment variables
     try {
       const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${envConfig.mistralApiKey}`,
+          "Authorization": `Bearer ${serverEnvConfig.mistralApiKey}`,
         },
         body: JSON.stringify({
           model: "mistral-small-latest",

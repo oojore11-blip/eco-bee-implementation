@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { envConfig, validateEnvironment } from "../../config/env";
+import { serverEnvConfig, validateServerEnvironment } from "../../config/env";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const { product_name, barcode, image_data } = body;
 
     // Validate environment configuration
-    const envValidation = validateEnvironment();
+    const envValidation = validateServerEnvironment();
     
     if (!envValidation.isValid) {
       return NextResponse.json({
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     // For now, return mock sustainability data
-    // Later, you can integrate with Mistral API for real analysis
+    // Later, you can integrate with Mistral API for real analysis using serverEnvConfig.mistralApiKey
     
     const mockSustainability = {
       sustainability_score: {
