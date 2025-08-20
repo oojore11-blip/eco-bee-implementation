@@ -274,7 +274,7 @@ export default function BarcodeScanner({
                 type="file"
                 accept="image/*"
                 onChange={handleFileUpload}
-                className="hidden"
+                className="hidden absolute opacity-0 pointer-events-none"
                 title="Upload barcode image"
                 placeholder="Choose an image file"
               />

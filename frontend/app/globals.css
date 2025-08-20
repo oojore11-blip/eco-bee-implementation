@@ -871,3 +871,25 @@ body.page-stable {
 .custom-checkbox:not(.selected) {
   border-color: var(--panel-border);
 }
+
+/* Hide file inputs completely */
+input[type="file"] {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Hide file input labels and any associated text */
+input[type="file"] + label,
+input[type="file"] ~ label,
+input[type="file"]::file-selector-button {
+  display: none !important;
+}
+
+/* Hide any file input related text that might appear */
+input[type="file"]::before,
+input[type="file"]::after {
+  display: none !important;
+}
