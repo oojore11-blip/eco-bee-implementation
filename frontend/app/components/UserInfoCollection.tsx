@@ -207,23 +207,23 @@ export default function UserInfoCollection({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="bg-white shadow-xl rounded-2xl max-w-md w-full overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="glass max-w-md w-full overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6">
-          <div className="text-center">
-            <FaGlobeAmericas className="text-4xl mx-auto mb-3 opacity-90" />
-            <h2 className="text-2xl font-bold mb-2">
-              Join the EcoBee Community!
-            </h2>
-            <p className="text-green-100 text-sm">
-              Help inspire others by sharing your sustainability journey
-            </p>
+        <div className="glass-header text-center p-6">
+          <div className="icon-badge">
+            <FaGlobeAmericas className="text-4xl text-blue-400" />
           </div>
+          <h2 className="neon-title text-2xl font-bold mb-2">
+            Join the EcoBee Community!
+          </h2>
+          <p className="text-slate-300 text-sm">
+            Help inspire others by sharing your sustainability journey
+          </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="glass-card-inner p-6">
           {/* Leaderboard Toggle */}
           <div className="mb-6">
             <label className="flex items-center space-x-3 cursor-pointer">
@@ -233,13 +233,13 @@ export default function UserInfoCollection({
                 onChange={(e) =>
                   handleInputChange("saveToLeaderboard", e.target.checked)
                 }
-                className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
+                className="w-4 h-4 text-blue-400 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
               />
               <div>
-                <span className="text-gray-800 font-medium">
+                <span className="text-white font-medium">
                   Add me to the leaderboard
                 </span>
-                <p className="text-gray-600 text-sm">
+                <p className="text-slate-300 text-sm">
                   Share your score to inspire others
                 </p>
               </div>
@@ -250,8 +250,8 @@ export default function UserInfoCollection({
             <>
               {/* Name Input */}
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  <FaUser className="inline mr-2" />
+                <label className="block text-white text-sm font-bold mb-2">
+                  <FaUser className="inline mr-2 text-blue-400" />
                   Your Name or Pseudonym
                 </label>
                 <input
@@ -259,22 +259,22 @@ export default function UserInfoCollection({
                   value={userInfo.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder="Enter your name or a fun pseudonym"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                  className={`w-full px-4 py-3 bg-gray-700/50 border border-gray-600 text-white placeholder-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
                     errors.name
-                      ? "border-red-300 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-green-500"
+                      ? "border-red-400 focus:ring-red-500"
+                      : "focus:ring-blue-500"
                   }`}
                   disabled={loading}
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                  <p className="text-red-400 text-xs mt-1">{errors.name}</p>
                 )}
               </div>
 
               {/* University Input */}
               <div className="mb-6">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  <FaUniversity className="inline mr-2" />
+                <label className="block text-white text-sm font-bold mb-2">
+                  <FaUniversity className="inline mr-2 text-blue-400" />
                   University or Affiliation
                 </label>
                 <select
@@ -282,24 +282,24 @@ export default function UserInfoCollection({
                   onChange={(e) =>
                     handleInputChange("university", e.target.value)
                   }
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                  className={`w-full px-4 py-3 bg-gray-700/50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
                     errors.university
-                      ? "border-red-300 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-green-500"
+                      ? "border-red-400 focus:ring-red-500"
+                      : "focus:ring-blue-500"
                   }`}
                   disabled={loading}
                   title="Select your university or affiliation"
                   aria-label="University or affiliation selection"
                 >
-                  <option value="">Select your affiliation</option>
+                  <option value="" className="bg-gray-700 text-slate-400">Select your affiliation</option>
                   {universityOptions.map((option) => (
-                    <option key={option} value={option}>
+                    <option key={option} value={option} className="bg-gray-700 text-white">
                       {option}
                     </option>
                   ))}
                 </select>
                 {errors.university && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="text-red-400 text-xs mt-1">
                     {errors.university}
                   </p>
                 )}
@@ -312,7 +312,7 @@ export default function UserInfoCollection({
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-gradient-to-r from-green-500 to-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-green-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
+              className="flex-1 btn btn-primary"
             >
               {loading ? (
                 <>
@@ -335,7 +335,7 @@ export default function UserInfoCollection({
               type="button"
               onClick={onSkip}
               disabled={loading}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
+              className="btn px-6 py-3 border border-gray-600 text-slate-300 rounded-lg font-semibold hover:bg-gray-700/50 hover:border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2"
             >
               <FaTimes />
               <span>Skip</span>
@@ -344,7 +344,7 @@ export default function UserInfoCollection({
 
           {/* Privacy Note */}
           <div className="mt-4 text-center">
-            <p className="text-gray-500 text-xs">
+            <p className="text-slate-400 text-xs">
               🔒 Your information is used only for the leaderboard and community
               features
             </p>

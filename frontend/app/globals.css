@@ -955,6 +955,16 @@ input[type="file"]::after {
   padding: 14px;
 }
 
+/* Glass header */
+.glass-header {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  border-bottom: 1px solid var(--panel-border);
+}
+
 /* Neon title styling */
 .neon-title {
   font-weight: 700;
@@ -986,4 +996,22 @@ input[type="file"]::after {
   justify-content: center !important;
   align-items: center !important;
   gap: 12px !important;
+}
+
+/* Glass panels */
+.glass {
+  background: radial-gradient(
+      120% 120% at 10% 0%,
+      rgba(255, 255, 255, 0.08),
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.02)
+    );
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  -webkit-backdrop-filter: blur(10px) saturate(120%); /* Added for Safari 9+, Safari on iOS 9+ */
+  backdrop-filter: blur(10px) saturate(120%);
 }

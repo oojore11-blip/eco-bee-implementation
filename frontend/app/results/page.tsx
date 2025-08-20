@@ -106,22 +106,24 @@ function ResultsContent() {
 
   if (!result) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-        <div className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 mt-20">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 p-4">
+        <div className="max-w-md mx-auto glass rounded-2xl p-8 mt-20">
           <div className="text-center">
-            <div className="text-6xl mb-4">🌱</div>
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
+            <div className="icon-badge mx-auto mb-6">
+              <span className="text-4xl">🌱</span>
+            </div>
+            <h2 className="text-xl neon-title mb-4">
               No Results Found
             </h2>
-            <p className="text-gray-600 mb-6">
-              Please complete the test to view your results.
+            <p className="text-white/70 mb-8 leading-relaxed">
+              Please complete the EcoBee quiz to view your sustainability results.
             </p>
             <Link
               href="/"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+              className="btn btn-primary"
             >
-              <FaArrowLeft className="mr-2" />
-              Back to Test
+              <FaArrowLeft />
+              <span>Back to Quiz</span>
             </Link>
           </div>
         </div>
@@ -134,65 +136,67 @@ function ResultsContent() {
   const grade = result.eco_score?.grade || result.score?.level || "N/A";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 p-4">
+      <div className="max-w-5xl mx-auto ml-8">
         {/* Header Card */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-full mr-4">
-                <FaTrophy className="text-green-600 text-2xl" />
+        <div className="glass rounded-2xl mb-6">
+          <div className="glass-header p-6 border-b border-white/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="icon-badge">
+                  <FaTrophy className="text-2xl" />
+                </div>
+                <div>
+                  <h1 className="text-2xl neon-title">
+                    Your EcoBee Results
+                  </h1>
+                  <p className="text-white/70">Environmental Impact Assessment</p>
+                  {/* Save status indicator */}
+                  {saveStatus === "saving" && (
+                    <p className="text-blue-400 text-sm mt-1">
+                      💾 Saving results...
+                    </p>
+                  )}
+                  {saveStatus === "saved" && (
+                    <p className="text-green-400 text-sm mt-1">
+                      ✅ Results saved securely
+                    </p>
+                  )}
+                  {saveStatus === "error" && (
+                    <p className="text-red-400 text-sm mt-1">
+                      ⚠️ Save failed (results still visible)
+                    </p>
+                  )}
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">
-                  Your EcoBee Results
-                </h1>
-                <p className="text-gray-600">Environmental Impact Assessment</p>
-                {/* Save status indicator */}
-                {saveStatus === "saving" && (
-                  <p className="text-blue-600 text-sm mt-1">
-                    💾 Saving results...
-                  </p>
-                )}
-                {saveStatus === "saved" && (
-                  <p className="text-green-600 text-sm mt-1">
-                    ✅ Results saved securely
-                  </p>
-                )}
-                {saveStatus === "error" && (
-                  <p className="text-red-600 text-sm mt-1">
-                    ⚠️ Save failed (results still visible)
-                  </p>
-                )}
-              </div>
+              <button
+                className="btn"
+                title="Share Results"
+                aria-label="Share Results"
+              >
+                <FaShareAlt />
+              </button>
             </div>
-            <button
-              className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-              title="Share Results"
-              aria-label="Share Results"
-            >
-              <FaShareAlt className="text-xl" />
-            </button>
           </div>
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-4">
+        <div className="grid lg:grid-cols-3 gap-6">
           {/* Score Circle Card */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg p-6 h-fit">
+            <div className="glass rounded-2xl p-6 h-fit">
               <div className="text-center">
-                <div className="relative inline-block mb-4">
+                <div className="relative inline-block mb-6">
                   <svg
-                    className="w-32 h-32 transform -rotate-90"
+                    className="w-36 h-36 transform -rotate-90"
                     viewBox="0 0 100 100"
                   >
                     <circle
                       cx="50"
                       cy="50"
                       r="40"
-                      stroke="#e5e7eb"
-                      strokeWidth="8"
+                      stroke="rgba(255, 255, 255, 0.1)"
+                      strokeWidth="6"
                       fill="none"
                     />
                     <circle
@@ -208,7 +212,7 @@ function ResultsContent() {
                           ? "#f59e0b"
                           : "#ef4444"
                       }
-                      strokeWidth="8"
+                      strokeWidth="6"
                       fill="none"
                       strokeLinecap="round"
                       strokeDasharray={`${2 * Math.PI * 40}`}
@@ -219,24 +223,18 @@ function ResultsContent() {
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center flex-col">
-                    <div
-                      className={`text-3xl font-bold ${getScoreColor(
-                        overallScore
-                      )}`}
-                    >
+                    <div className="text-4xl font-bold text-white mb-1">
                       {overallScore}
                     </div>
-                    <div className="text-sm text-gray-500">/ 100</div>
-                    <div
-                      className={`text-lg font-bold px-3 py-1 rounded-full mt-1 ${getScoreBg(
-                        overallScore
-                      )}`}
-                    >
-                      {grade}
+                    <div className="text-sm text-white/60">/ 100</div>
+                    <div className="glass-card-inner px-3 py-1 rounded-full mt-2">
+                      <span className="text-sm font-semibold text-white">
+                        {grade}
+                      </span>
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-white/80 leading-relaxed">
                   {overallScore >= 80
                     ? "Excellent! You're living sustainably."
                     : overallScore >= 60
@@ -249,12 +247,14 @@ function ResultsContent() {
 
           {/* Category Scores */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                <FaChartBar className="mr-2 text-blue-600" />
+            <div className="glass rounded-2xl p-6">
+              <h3 className="text-lg neon-title mb-6 flex items-center gap-3">
+                <div className="icon-badge">
+                  <FaChartBar />
+                </div>
                 Category Breakdown
               </h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 {[
                   {
                     name: "Food Choices",
@@ -296,25 +296,19 @@ function ResultsContent() {
                 ].map((category, index) => (
                   <div
                     key={index}
-                    className={`p-3 rounded-lg border-2 ${getScoreBg(
-                      category.score
-                    )}`}
+                    className="glass-card-inner p-4 rounded-lg"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <span className="text-lg mr-2">{category.icon}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{category.icon}</span>
                         <div>
-                          <div className="font-medium text-gray-800 text-sm">
+                          <div className="font-semibold text-white text-sm">
                             {category.name}
                           </div>
-                          <div className="text-xs text-gray-500">Score</div>
+                          <div className="text-xs text-white/60">Score</div>
                         </div>
                       </div>
-                      <div
-                        className={`text-xl font-bold ${getScoreColor(
-                          category.score
-                        )}`}
-                      >
+                      <div className="text-xl font-bold text-white">
                         {category.score}
                       </div>
                     </div>
@@ -327,43 +321,45 @@ function ResultsContent() {
 
         {/* Reflection Analysis */}
         {result.analysis?.reflection_analysis && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mt-4">
-            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-              <FaStar className="mr-2 text-purple-600" />
+          <div className="glass rounded-2xl p-6 mt-6">
+            <h3 className="text-lg neon-title mb-6 flex items-center gap-3">
+              <div className="icon-badge">
+                <FaStar />
+              </div>
               Sustainability Reflection
-              <span className="ml-auto bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm font-medium">
+              <span className="ml-auto glass-card-inner px-3 py-1 rounded-full text-sm font-semibold text-white">
                 {result.analysis.reflection_analysis.reflection_score || 0}/10
               </span>
             </h3>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               {/* AI Insights */}
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-2 flex items-center">
-                  <FaLightbulb className="mr-1 text-sm" />
+              <div className="glass-card-inner p-4 rounded-lg">
+                <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                  <FaLightbulb className="text-yellow-400" />
                   AI Analysis
                 </h4>
-                <p className="text-blue-700 text-sm leading-relaxed">
+                <p className="text-white/80 text-sm leading-relaxed">
                   {result.analysis.reflection_analysis.insights}
                 </p>
               </div>
 
               {/* Strengths & Suggestions */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {result.analysis.reflection_analysis.strengths?.length > 0 && (
-                  <div className="bg-green-50 p-3 rounded-lg">
-                    <h4 className="font-semibold text-green-800 text-sm mb-2">
+                  <div className="glass-card-inner p-4 rounded-lg">
+                    <h4 className="font-semibold text-green-400 text-sm mb-3">
                       Strengths
                     </h4>
-                    <ul className="space-y-1">
+                    <ul className="space-y-2">
                       {result.analysis.reflection_analysis.strengths
                         .slice(0, 2)
                         .map((strength: string, index: number) => (
                           <li
                             key={index}
-                            className="text-green-700 text-xs flex items-start"
+                            className="text-white/80 text-xs flex items-start gap-2"
                           >
-                            <span className="mr-1">✓</span>
+                            <span className="text-green-400 font-bold">✓</span>
                             {strength}
                           </li>
                         ))}
@@ -373,19 +369,19 @@ function ResultsContent() {
 
                 {result.analysis.reflection_analysis.suggestions?.length >
                   0 && (
-                  <div className="bg-amber-50 p-3 rounded-lg">
-                    <h4 className="font-semibold text-amber-800 text-sm mb-2">
+                  <div className="glass-card-inner p-4 rounded-lg">
+                    <h4 className="font-semibold text-yellow-400 text-sm mb-3">
                       Suggestions
                     </h4>
-                    <ul className="space-y-1">
+                    <ul className="space-y-2">
                       {result.analysis.reflection_analysis.suggestions
                         .slice(0, 2)
                         .map((suggestion: string, index: number) => (
                           <li
                             key={index}
-                            className="text-amber-700 text-xs flex items-start"
+                            className="text-white/80 text-xs flex items-start gap-2"
                           >
-                            <span className="mr-1">💡</span>
+                            <span className="text-yellow-400 font-bold">💡</span>
                             {suggestion}
                           </li>
                         ))}
@@ -397,8 +393,8 @@ function ResultsContent() {
 
             {/* Themes */}
             {result.analysis.reflection_analysis.themes?.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <h4 className="font-semibold text-gray-700 text-sm mb-2">
+              <div className="mt-6 pt-4 border-t border-white/10">
+                <h4 className="font-semibold text-white/80 text-sm mb-3">
                   Key Themes
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -407,7 +403,7 @@ function ResultsContent() {
                     .map((theme: string, index: number) => (
                       <span
                         key={index}
-                        className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs"
+                        className="glass-card-inner px-3 py-1 rounded-full text-xs text-white font-medium"
                       >
                         {theme}
                       </span>
@@ -420,21 +416,23 @@ function ResultsContent() {
 
         {/* Impact & Recommendations */}
         {(result.analysis || result.comprehensive_analysis) && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mt-4">
-            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-              <FaGlobe className="mr-2 text-green-600" />
+          <div className="glass rounded-2xl p-6 mt-6">
+            <h3 className="text-lg neon-title mb-6 flex items-center gap-3">
+              <div className="icon-badge">
+                <FaGlobe />
+              </div>
               Environmental Impact & Recommendations
             </h3>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               {/* Impact Summary */}
               {(result.analysis?.impact_summary ||
                 result.comprehensive_analysis?.overall_impact) && (
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-green-800 mb-2">
+                <div className="glass-card-inner p-4 rounded-lg">
+                  <h4 className="font-semibold text-green-400 mb-3">
                     Today's Impact
                   </h4>
-                  <p className="text-green-700 text-sm">
+                  <p className="text-white/80 text-sm leading-relaxed">
                     {result.analysis?.impact_summary ||
                       `${
                         result.comprehensive_analysis?.overall_impact
@@ -449,11 +447,11 @@ function ResultsContent() {
                 result.analysis?.recommendations ||
                 result.comprehensive_analysis?.recommendations
               )?.length > 0 && (
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-blue-800 mb-2">
+                <div className="glass-card-inner p-4 rounded-lg">
+                  <h4 className="font-semibold text-blue-400 mb-3">
                     Top Recommendations
                   </h4>
-                  <ul className="space-y-1">
+                  <ul className="space-y-2">
                     {(
                       result.analysis?.recommendations ||
                       result.comprehensive_analysis?.recommendations ||
@@ -463,9 +461,9 @@ function ResultsContent() {
                       .map((rec: string, index: number) => (
                         <li
                           key={index}
-                          className="text-blue-700 text-sm flex items-start"
+                          className="text-white/80 text-sm flex items-start gap-2"
                         >
-                          <FaCheckCircle className="text-blue-500 mt-0.5 mr-2 flex-shrink-0 text-xs" />
+                          <FaCheckCircle className="text-blue-400 mt-0.5 flex-shrink-0 text-xs" />
                           <span>{rec}</span>
                         </li>
                       ))}
@@ -477,18 +475,18 @@ function ResultsContent() {
         )}
 
         {/* Action Buttons */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mt-4">
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="glass rounded-2xl p-6 mt-6">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+              className="btn btn-primary"
             >
-              <FaArrowLeft className="mr-2" />
-              Take Another Assessment
+              <FaArrowLeft />
+              <span>Take Another Assessment</span>
             </Link>
-            <button className="inline-flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors">
-              <FaShareAlt className="mr-2" />
-              Share Results
+            <button className="btn">
+              <FaShareAlt />
+              <span>Share Results</span>
             </button>
           </div>
         </div>
@@ -501,11 +499,17 @@ export default function ResultsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-4 text-lg text-gray-600">
-              Loading your results...
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 flex items-center justify-center p-4">
+          <div className="glass rounded-2xl p-8 text-center max-w-md w-full">
+            <div className="icon-badge mx-auto mb-6">
+              <span className="text-4xl">🌱</span>
+            </div>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-4 border-yellow-400 border-t-transparent"></div>
+              <span className="text-lg text-yellow-400 font-semibold">Processing...</span>
+            </div>
+            <p className="text-white/70">
+              Loading your sustainability results...
             </p>
           </div>
         </div>
