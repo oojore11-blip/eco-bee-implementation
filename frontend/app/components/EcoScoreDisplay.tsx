@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   FaLeaf,
@@ -111,6 +111,12 @@ export default function EcoScoreDisplay({
   onGetTips,
 }: EcoScoreDisplayProps) {
   const router = useRouter();
+  const [currentUrl, setCurrentUrl] = useState("");
+
+  useEffect(() => {
+    // Set the current URL after component mounts
+    setCurrentUrl(window.location.href);
+  }, []);
 
   const boundaryScores = Object.entries(
     scoringResult.per_boundary_averages
@@ -133,12 +139,12 @@ export default function EcoScoreDisplay({
       navigator.share({
         title: "My EcoBee Environmental Score",
         text: `I scored ${scoringResult.grade} (${scoringResult.composite}/100) on my environmental impact assessment!`,
-        url: window.location.href,
+        url: currentUrl,
       });
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(
-        `I scored ${scoringResult.grade} (${scoringResult.composite}/100) on my environmental impact assessment! Check out EcoBee: ${window.location.href}`
+        `I scored ${scoringResult.grade} (${scoringResult.composite}/100) on my environmental impact assessment! Check out EcoBee: ${currentUrl}`
       );
       alert("Score copied to clipboard!");
     }

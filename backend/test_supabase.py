@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Test script to verify Supabase connection and quiz results saving
-Run this from the backend directory after setting up your .env file
+Run this from the backend directory after setting up your .env.local file
 """
 
 import os
@@ -14,7 +14,7 @@ import uuid
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(dotenv_path=".env.local")
 
 def test_supabase_connection():
     """Test the Supabase connection and table operations"""
@@ -24,8 +24,8 @@ def test_supabase_connection():
     supabase_key = os.getenv("SUPABASE_KEY")
     
     if not supabase_url or not supabase_key:
-        print("❌ SUPABASE_URL or SUPABASE_KEY not found in .env file")
-        print("Please add these to your backend/.env file:")
+        print("❌ SUPABASE_URL or SUPABASE_KEY not found in .env.local file")
+        print("Please add these to your backend/.env.local file:")
         print("SUPABASE_URL=https://your-project.supabase.co")
         print("SUPABASE_KEY=your-service-role-key")
         return False

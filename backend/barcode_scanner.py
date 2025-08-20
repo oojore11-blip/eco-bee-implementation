@@ -14,8 +14,8 @@ from PIL import Image
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from .env.local file
+load_dotenv(dotenv_path=".env.local")
 
 # Import sustainability analyzer
 try:
@@ -36,7 +36,7 @@ class PixtralBarcodeScanner:
         """
         self.api_key = api_key or os.getenv('MISTRAL_API_KEY')
         if not self.api_key:
-            print("⚠️  Warning: No Mistral API key found. Please check your .env file or set MISTRAL_API_KEY environment variable")
+            print("⚠️  Warning: No Mistral API key found. Please check your .env.local file or set MISTRAL_API_KEY environment variable")
         
         self.api_url = "https://api.mistral.ai/v1/chat/completions"
         self.model = "pixtral-12b-2409"

@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
+load_dotenv(dotenv_path=".env.local")
 
 @dataclass
 class SustainabilityScore:

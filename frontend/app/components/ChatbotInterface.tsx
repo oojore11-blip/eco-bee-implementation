@@ -22,6 +22,19 @@ export default function ChatbotInterface({
   quizResponses,
   scoringResult,
 }: ChatbotInterfaceProps) {
+  // Use a counter for unique IDs to avoid hydration issues
+  const messageIdCounter = useRef(0);
+  const [isClient, setIsClient] = useState(false);
+
+  const getNextMessageId = () => {
+    messageIdCounter.current += 1;
+    return `msg-${messageIdCounter.current}`;
+  };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const generatePersonalizedWelcome = () => {
     if (scoringResult) {
       const grade = scoringResult.grade;
@@ -59,18 +72,25 @@ What area would you like to focus on first?`;
     return "Hi! I'm EcoBee, your AI-powered sustainability assistant! 🌱 I'm powered by Mistral AI and can help you with eco-friendly tips, product recommendations, and answer questions about sustainable living. How can I help you today?";
   };
 
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "welcome",
-      text: generatePersonalizedWelcome(),
-      isUser: false,
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Initialize welcome message after component mounts to avoid hydration issues
+  useEffect(() => {
+    if (isClient && messages.length === 0) {
+      setMessages([
+        {
+          id: getNextMessageId(),
+          text: generatePersonalizedWelcome(),
+          isUser: false,
+          timestamp: new Date(),
+        },
+      ]);
+    }
+  }, [isClient]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -85,7 +105,7 @@ What area would you like to focus on first?`;
 
     // Add user message
     const userMessage: Message = {
-      id: `user-${Date.now()}`,
+      id: getNextMessageId(),
       text: text.trim(),
       isUser: true,
       timestamp: new Date(),
@@ -141,7 +161,7 @@ What area would you like to focus on first?`;
       const result = await response.json();
 
       const botMessage: Message = {
-        id: `bot-${Date.now()}`,
+        id: getNextMessageId(),
         text:
           result.response ||
           "I'm sorry, I couldn't generate a response right now.",
@@ -156,7 +176,7 @@ What area would you like to focus on first?`;
       // Fallback to local response if API fails
       const fallbackResponse = generateFallbackResponse(text.trim());
       const botMessage: Message = {
-        id: `bot-${Date.now()}`,
+        id: getNextMessageId(),
         text: fallbackResponse,
         isUser: false,
         timestamp: new Date(),

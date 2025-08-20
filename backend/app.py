@@ -22,7 +22,7 @@ from barcode_scanner import create_scanner  # Add barcode scanner import
 
 # Load environment variables
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(dotenv_path=".env.local")
 
 # Load Mistral API configuration
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
@@ -39,7 +39,7 @@ except Exception:
 def call_mistral_api(message: str, context: str = "sustainability") -> str:
     """Call Mistral AI API for sustainability-focused responses"""
     if not MISTRAL_API_KEY:
-        raise ValueError("MISTRAL_API_KEY is not configured. Please add your Mistral API key to the .env file.")
+        raise ValueError("MISTRAL_API_KEY is not configured. Please add your Mistral API key to the .env.local file.")
     
     headers = {
         "Authorization": f"Bearer {MISTRAL_API_KEY}",
@@ -878,7 +878,7 @@ async def chat_with_sustainability_bot(chat_message: ChatMessage):
         error_msg = str(e)
         print(f"Configuration error in chat endpoint: {error_msg}")
         return {
-            "response": f"⚠️ **Configuration Error**: {error_msg}\n\nPlease configure your Mistral API key in the .env file to use the sustainability chatbot.",
+            "response": f"⚠️ **Configuration Error**: {error_msg}\n\nPlease configure your Mistral API key in the .env.local file to use the sustainability chatbot.",
             "error": "configuration_error"
         }
         

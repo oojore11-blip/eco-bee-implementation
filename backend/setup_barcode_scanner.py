@@ -36,12 +36,12 @@ def install_requirements():
 
 def check_api_key():
     """Check if Mistral API key is configured"""
-    # First check if .env file exists and load it
-    env_file = Path(".env")
+    # First check if .env.local file exists and load it
+    env_file = Path(".env.local")
     if env_file.exists():
         if DOTENV_AVAILABLE:
-            load_dotenv()
-            print("✅ Found .env file")
+            load_dotenv(dotenv_path=".env.local")
+            print("✅ Found .env.local file")
         else:
             print("⚠️  python-dotenv not installed, checking environment variables only...")
     
@@ -53,10 +53,10 @@ def check_api_key():
     else:
         print("⚠️  Mistral API key not found")
         if env_file.exists():
-            print("   .env file exists but MISTRAL_API_KEY not found in it")
-            print("   Please add: MISTRAL_API_KEY=your_api_key_here to your .env file")
+            print("   .env.local file exists but MISTRAL_API_KEY not found in it")
+            print("   Please add: MISTRAL_API_KEY=your_api_key_here to your .env.local file")
         else:
-            print("   Please create a .env file with: MISTRAL_API_KEY=your_api_key_here")
+            print("   Please create a .env.local file with: MISTRAL_API_KEY=your_api_key_here")
             print("   Or set the environment variable:")
         print("   You can get an API key from: https://console.mistral.ai/")
         return False
