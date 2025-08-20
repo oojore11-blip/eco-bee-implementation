@@ -186,7 +186,7 @@ export default function EcoScoreDisplay({
           {/* Fixed Floating Score Circle - Top Right */}
           <div className="absolute top-4 right-4 z-10 glass-card-inner rounded-full p-2">
             <div className="relative" style={{ width: RING_SIZE_PX, height: RING_SIZE_PX }}>
-              <svg className="w-36 h-36 transform -rotate-180" viewBox="0 0 100 100" width={RING_SIZE_PX} height={RING_SIZE_PX}>
+              <svg className="w-36 h-36 transform -rotate--90" viewBox="0 0 100 100" width={RING_SIZE_PX} height={RING_SIZE_PX}>
                 {/* Background circle */}
                 <circle
                   cx="50"
