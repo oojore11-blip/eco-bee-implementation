@@ -156,10 +156,20 @@ What area would you like to focus on first?`;
       });
 
       if (!response.ok) {
+        console.error(`API request failed: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('API error response:', errorText);
         throw new Error(`API request failed: ${response.status}`);
       }
 
       const result = await response.json();
+      console.log('Chat API response:', result);
+
+      // Check if the API response has the expected format
+      if (!result.success) {
+        console.error('API returned success=false:', result);
+        throw new Error(result.error || 'API returned unsuccessful response');
+      }
 
       const botMessage: Message = {
         id: getNextMessageId(),

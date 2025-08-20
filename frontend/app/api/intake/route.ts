@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { envConfig, validateEnvironment } from "../../config/env";
+import { serverEnvConfig, validateServerEnvironment } from "../../config/env";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const { quiz_responses, items, session_id, user_id } = body;
 
     // Validate environment configuration
-    const envValidation = validateEnvironment();
+    const envValidation = validateServerEnvironment();
 
     if (!envValidation.isValid) {
       console.warn(`Environment validation failed: ${envValidation.message}`);
@@ -21,13 +21,19 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // For now, create a mock scoring result
-    // Later, you can integrate with Mistral API and Supabase here using envConfig
-    const mockScoringResult = createMockScoringResult(quiz_responses);
+    // Create scoring result
+    const scoringResult = createMockScoringResult(quiz_responses);
+    
+    // TODO: Add Supabase integration here
+    // You can use serverEnvConfig.supabaseUrl and serverEnvConfig.supabaseKey
+    // to connect to Supabase and store the quiz results
+    
+    console.log('Quiz data received:', { quiz_responses, items, session_id, user_id });
+    console.log('Scoring result:', scoringResult);
 
     return NextResponse.json({
       success: true,
-      scoring_result: mockScoringResult,
+      scoring_result: scoringResult,
       message: "Quiz processed successfully",
     });
   } catch (error) {
