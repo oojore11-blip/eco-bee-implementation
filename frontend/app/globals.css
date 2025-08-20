@@ -277,41 +277,6 @@ body.page-stable {
   transform: translateY(0);
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border-radius: 12px;
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  color: var(--app-fore);
-  font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 200ms ease;
-}
-.btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-1px);
-}
-.btn:active {
-  transform: translateY(0);
-}
-
-.btn-primary {
-  background: var(--ring-1);
-  color: #000;
-  border: 1px solid var(--ring-1);
-  box-shadow: 0 4px 16px rgba(255, 213, 74, 0.25);
-}
-.btn-primary:hover {
-  background: #ffdb5c;
-  box-shadow: 0 6px 20px rgba(255, 213, 74, 0.35);
-}
-
 /* Glass panels */
 .glass {
   background: radial-gradient(
@@ -859,6 +824,9 @@ body.page-stable {
   color: #000;
   border: 1px solid var(--ring-1);
   box-shadow: 0 4px 16px rgba(255, 213, 74, 0.25);
+  /* Ensure consistent sizing */
+  padding: 12px 20px;
+  gap: 8px;
 }
 
 .btn-primary:hover {
@@ -870,4 +838,36 @@ body.page-stable {
 .btn[disabled], .btn-primary[disabled] {
   opacity: 0.5;
   pointer-events: none;
+}
+
+/* Quiz navigation buttons - ensure consistent sizing */
+.quiz-nav-btn {
+  min-width: 120px;
+  width: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Custom checkbox styling for multiple choice questions */
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+
+.custom-checkbox.selected {
+  border-color: var(--ring-1);
+  background: var(--ring-1);
+  color: #000;
+}
+
+.custom-checkbox:not(.selected) {
+  border-color: var(--panel-border);
 }

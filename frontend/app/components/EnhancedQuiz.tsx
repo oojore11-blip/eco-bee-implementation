@@ -374,23 +374,19 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
                       : [...multipleAnswers, option.value];
                     handleAnswerChange(newAnswers);
                   }}
-                  className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ${
-                    isSelected
-                      ? "border-blue-500 bg-blue-50 text-blue-800"
-                      : "border-gray-200 bg-white hover:border-blue-300"
+                  className={`option-button ${
+                    isSelected ? "selected" : ""
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div
-                        className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                          isSelected
-                            ? "border-blue-500 bg-blue-500"
-                            : "border-gray-300"
+                        className={`custom-checkbox ${
+                          isSelected ? "selected" : ""
                         }`}
                       >
                         {isSelected && (
-                          <FaCheck className="text-white text-xs" />
+                          <FaCheck className="text-xs" />
                         )}
                       </div>
                       <span className="font-medium">{option.label}</span>
@@ -656,7 +652,7 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
           <button
             onClick={handlePrevious}
             disabled={quizState.currentQuestionIndex === 0}
-            className={`btn ${
+            className={`btn quiz-nav-btn ${
               quizState.currentQuestionIndex === 0 ? "" : ""
             }`}
           >
@@ -669,13 +665,13 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
             disabled={!currentAnswer || 
                      (Array.isArray(currentAnswer) && currentAnswer.length === 0) ||
                      (typeof currentAnswer === 'string' && currentAnswer.trim() === '')}
-            className={`${
+            className={`btn${
               !currentAnswer || 
               (Array.isArray(currentAnswer) && currentAnswer.length === 0) ||
               (typeof currentAnswer === 'string' && currentAnswer.trim() === '')
-                ? "btn"
-                : "btn-primary"
-            }`}
+                ? ""
+                : "-primary"
+            } quiz-nav-btn`}
           >
             <span>{isLastQuestion ? "Complete" : "Next"}</span>
             <FaArrowRight />
