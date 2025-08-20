@@ -153,32 +153,37 @@ export default function BarcodeScanner({
 
   const scanImage = async (imageBlob: Blob) => {
     setLoading(true);
-    console.log('🔍 Starting barcode scan with blob:', imageBlob);
+
     try {
       // Convert blob to base64 for API
       const base64Data = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => {
-          console.log('📄 File converted to base64, length:', (reader.result as string).length);
-          resolve(reader.result as string);
+
+        reader.onload = (event) => {
+          const result = event.target?.result;
+          if (typeof result === "string") {
+            resolve(result);
+          } else {
+            reject(new Error("Failed to convert file to base64"));
+          }
         };
-        reader.onerror = (error) => {
-          console.error('❌ FileReader error:', error);
-          reject(error);
+
+        reader.onerror = () => {
+          reject(new Error("FileReader error"));
         };
+
         reader.readAsDataURL(imageBlob);
       });
-      
+
       const requestBody = {
         image_data: base64Data,
         camera_input: true,
         product_type: productType,
       };
-      
-      console.log('🚀 Making API request to:', getApiUrl("/api/scan-barcode"));
-      console.log('📦 Request body keys:', Object.keys(requestBody));
-      
-      const response = await fetch(getApiUrl("/api/scan-barcode"), {
+
+      const apiUrl = getApiUrl("/scan-barcode");
+
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -186,39 +191,20 @@ export default function BarcodeScanner({
         body: JSON.stringify(requestBody),
       });
 
-      console.log('📡 API Response status:', response.status, response.statusText);
-      
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ API Error Response:', errorText);
-        throw new Error(`API request failed: ${response.status} - ${errorText}`);
+        throw new Error(
+          `API request failed: ${response.status} - ${errorText}`
+        );
       }
 
       const result: BarcodeResult = await response.json();
-      console.log('✅ BarcodeScanner received result:', result);
-      console.log('🔍 Result structure check:', {
-        success: result.success,
-        detected: result.detected,
-        barcode: result.barcode,
-        hasProductInfo: !!result.product_info,
-        hasSustainability: !!result.sustainability
-      });
-      
       setResult(result);
-      console.log('📊 Result state set, component should re-render now');
 
       if (result.success && result.barcode) {
-        console.log('🎯 Success! Calling onBarcodeDetected with:', {
-          barcode: result.barcode,
-          productInfo: result.product_info,
-          fullResult: result,
-        });
         onBarcodeDetected(result.barcode, result.product_info, result);
-      } else {
-        console.warn('⚠️ Barcode scan was not successful:', result);
       }
     } catch (error) {
-      console.error("❌ Error scanning barcode:", error);
       setResult({
         success: false,
         barcode: null,
@@ -226,11 +212,13 @@ export default function BarcodeScanner({
         product_details: null,
         sustainability: null,
         detected: false,
-        error: "Failed to scan barcode. Please try again.",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to scan barcode. Please try again.",
       });
     } finally {
       setLoading(false);
-      console.log('🏁 Barcode scan process completed');
     }
   };
 
@@ -240,16 +228,6 @@ export default function BarcodeScanner({
       fileInputRef.current.value = "";
     }
   };
-
-  // Debug logging for result state
-  if (result) {
-    console.log('🎨 BarcodeScanner render with result:', { 
-      success: result.success, 
-      detected: result.detected,
-      hasProductInfo: !!(result.product_info || result.product_details),
-      hasSustainability: !!result.sustainability
-    });
-  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

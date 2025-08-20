@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     // Validate environment configuration
     const envValidation = validateServerEnvironment();
-    
+
     if (!envValidation.isValid) {
       // Return mock data if database not configured
       const mockLeaderboard = [
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
         },
         {
           id: 2,
-          user_name: "GreenGuru", 
+          user_name: "GreenGuru",
           eco_score: 88,
           rank: 2,
           environmental_actions_taken: 35,
@@ -47,13 +47,16 @@ export async function GET(request: NextRequest) {
 
     // Get real leaderboard data
     const result = await getLeaderboard();
-    
+
     if (!result.success) {
-      return NextResponse.json({
-        success: false,
-        error: result.error,
-        leaderboard: [],
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: result.error,
+          leaderboard: [],
+        },
+        { status: 500 }
+      );
     }
 
     // Transform data to match expected format
@@ -72,7 +75,6 @@ export async function GET(request: NextRequest) {
       total_users: leaderboard.length,
       message: "Leaderboard retrieved successfully",
     });
-
   } catch (error) {
     console.error("Leaderboard API error:", error);
     return NextResponse.json(

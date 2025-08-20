@@ -41,15 +41,24 @@ export const clientEnvConfig = {
 export function validateServerEnvironment() {
   const missing = [];
 
-  if (!serverEnvConfig.mistralApiKey || serverEnvConfig.mistralApiKey === "production") {
+  if (
+    !serverEnvConfig.mistralApiKey ||
+    serverEnvConfig.mistralApiKey === "production"
+  ) {
     missing.push("MISTRAL_API_KEY");
   }
 
-  if (!serverEnvConfig.supabaseUrl || serverEnvConfig.supabaseUrl === "production") {
+  if (
+    !serverEnvConfig.supabaseUrl ||
+    serverEnvConfig.supabaseUrl === "production"
+  ) {
     missing.push("SUPABASE_URL");
   }
 
-  if (!serverEnvConfig.supabaseKey || serverEnvConfig.supabaseKey === "production") {
+  if (
+    !serverEnvConfig.supabaseKey ||
+    serverEnvConfig.supabaseKey === "production"
+  ) {
     missing.push("SUPABASE_KEY");
   }
 

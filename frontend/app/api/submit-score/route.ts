@@ -14,32 +14,45 @@ interface SubmitScoreRequest {
 export async function POST(request: NextRequest) {
   try {
     const body: SubmitScoreRequest = await request.json();
-    const { 
-      user_id, 
-      pseudonym, 
-      composite_score, 
-      boundary_scores, 
-      campus_affiliation, 
-      quiz_responses 
+    const {
+      user_id,
+      pseudonym,
+      composite_score,
+      boundary_scores,
+      campus_affiliation,
+      quiz_responses,
     } = body;
 
     // Validate required fields
-    if (!user_id || !pseudonym || composite_score === undefined || !boundary_scores || !campus_affiliation) {
-      return NextResponse.json({
-        success: false,
-        error: "Missing required fields: user_id, pseudonym, composite_score, boundary_scores, campus_affiliation",
-      }, { status: 400 });
+    if (
+      !user_id ||
+      !pseudonym ||
+      composite_score === undefined ||
+      !boundary_scores ||
+      !campus_affiliation
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Missing required fields: user_id, pseudonym, composite_score, boundary_scores, campus_affiliation",
+        },
+        { status: 400 }
+      );
     }
 
     // Validate environment configuration
     const envValidation = validateServerEnvironment();
-    
+
     if (!envValidation.isValid) {
-      return NextResponse.json({
-        success: false,
-        error: "Database not configured - cannot submit to leaderboard",
-        message: envValidation.message,
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Database not configured - cannot submit to leaderboard",
+          message: envValidation.message,
+        },
+        { status: 500 }
+      );
     }
 
     // Submit to database
@@ -53,17 +66,19 @@ export async function POST(request: NextRequest) {
     });
 
     if (!result.success) {
-      return NextResponse.json({
-        success: false,
-        error: result.error,
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: result.error,
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
       success: true,
       message: "Score submitted to leaderboard successfully",
     });
-
   } catch (error) {
     console.error("Submit score API error:", error);
     return NextResponse.json(

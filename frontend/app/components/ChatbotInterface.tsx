@@ -148,8 +148,8 @@ What area would you like to focus on first?`;
         user_id: "web-user-" + Date.now(),
       };
 
-      console.log('💬 Making chat API request to:', getApiUrl("/api/chat"));
-      console.log('📦 Request body:', requestBody);
+      console.log("💬 Making chat API request to:", getApiUrl("/api/chat"));
+      console.log("📦 Request body:", requestBody);
 
       // Call backend Mistral API
       const response = await fetch(getApiUrl("/api/chat"), {
@@ -160,22 +160,30 @@ What area would you like to focus on first?`;
         body: JSON.stringify(requestBody),
       });
 
-      console.log('📡 Chat API Response status:', response.status, response.statusText);
+      console.log(
+        "📡 Chat API Response status:",
+        response.status,
+        response.statusText
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(`❌ API request failed: ${response.status} ${response.statusText}`);
-        console.error('❌ API error response:', errorText);
-        throw new Error(`API request failed: ${response.status} - ${errorText}`);
+        console.error(
+          `❌ API request failed: ${response.status} ${response.statusText}`
+        );
+        console.error("❌ API error response:", errorText);
+        throw new Error(
+          `API request failed: ${response.status} - ${errorText}`
+        );
       }
 
       const result = await response.json();
-      console.log('✅ Chat API response:', result);
+      console.log("✅ Chat API response:", result);
 
       // Check if the API response has the expected format
       if (!result.success) {
-        console.error('❌ API returned success=false:', result);
-        throw new Error(result.error || 'API returned unsuccessful response');
+        console.error("❌ API returned success=false:", result);
+        throw new Error(result.error || "API returned unsuccessful response");
       }
 
       const botMessage: Message = {

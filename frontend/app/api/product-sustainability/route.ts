@@ -8,18 +8,21 @@ export async function POST(request: NextRequest) {
 
     // Validate environment configuration
     const envValidation = validateServerEnvironment();
-    
+
     if (!envValidation.isValid) {
-      return NextResponse.json({
-        success: false,
-        error: "API configuration incomplete",
-        sustainability: null,
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "API configuration incomplete",
+          sustainability: null,
+        },
+        { status: 500 }
+      );
     }
 
     // For now, return mock sustainability data
     // Later, you can integrate with Mistral API for real analysis using serverEnvConfig.mistralApiKey
-    
+
     const mockSustainability = {
       sustainability_score: {
         overall_score: Math.floor(Math.random() * 40) + 30, // 30-70 range
@@ -49,7 +52,6 @@ export async function POST(request: NextRequest) {
       sustainability: mockSustainability,
       note: "This is generated sustainability data. For more accurate analysis, ensure all API keys are properly configured.",
     });
-
   } catch (error) {
     console.error("Product sustainability API error:", error);
     return NextResponse.json(

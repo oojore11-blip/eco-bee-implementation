@@ -1,10 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
-import { serverEnvConfig } from '../app/config/env';
+import { createClient } from "@supabase/supabase-js";
+import { serverEnvConfig } from "../app/config/env";
 
 // Create Supabase client with server-side environment variables
 export const supabase = createClient(
-  serverEnvConfig.supabaseUrl || '',
-  serverEnvConfig.supabaseKey || ''
+  serverEnvConfig.supabaseUrl || "",
+  serverEnvConfig.supabaseKey || ""
 );
 
 // Database interface types
@@ -29,70 +29,78 @@ export interface QuizSubmission {
 }
 
 // Database operations
-export async function submitToLeaderboard(entry: LeaderboardEntry): Promise<{ success: boolean; error?: string }> {
+export async function submitToLeaderboard(
+  entry: LeaderboardEntry
+): Promise<{ success: boolean; error?: string }> {
   try {
-    const { data, error } = await supabase
-      .from('leaderboard')
-      .insert([{
+    const { data, error } = await supabase.from("leaderboard").insert([
+      {
         user_id: entry.user_id,
         pseudonym: entry.pseudonym,
         composite_score: entry.composite_score,
         boundary_scores: entry.boundary_scores,
         campus_affiliation: entry.campus_affiliation,
-        quiz_responses: entry.quiz_responses
-      }]);
+        quiz_responses: entry.quiz_responses,
+      },
+    ]);
 
     if (error) {
-      console.error('Supabase leaderboard error:', error);
+      console.error("Supabase leaderboard error:", error);
       return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Database submission error:', error);
-    return { success: false, error: 'Failed to submit to leaderboard' };
+    console.error("Database submission error:", error);
+    return { success: false, error: "Failed to submit to leaderboard" };
   }
 }
 
-export async function getLeaderboard(): Promise<{ success: boolean; data?: LeaderboardEntry[]; error?: string }> {
+export async function getLeaderboard(): Promise<{
+  success: boolean;
+  data?: LeaderboardEntry[];
+  error?: string;
+}> {
   try {
     const { data, error } = await supabase
-      .from('leaderboard')
-      .select('*')
-      .order('composite_score', { ascending: true }) // Lower scores are better
+      .from("leaderboard")
+      .select("*")
+      .order("composite_score", { ascending: true }) // Lower scores are better
       .limit(100);
 
     if (error) {
-      console.error('Supabase leaderboard fetch error:', error);
+      console.error("Supabase leaderboard fetch error:", error);
       return { success: false, error: error.message };
     }
 
     return { success: true, data: data || [] };
   } catch (error) {
-    console.error('Database fetch error:', error);
-    return { success: false, error: 'Failed to fetch leaderboard' };
+    console.error("Database fetch error:", error);
+    return { success: false, error: "Failed to fetch leaderboard" };
   }
 }
 
-export async function saveQuizSubmission(submission: QuizSubmission): Promise<{ success: boolean; error?: string }> {
+export async function saveQuizSubmission(
+  submission: QuizSubmission
+): Promise<{ success: boolean; error?: string }> {
   try {
-    const { data, error } = await supabase
-      .from('quiz_submissions')
-      .insert([{
+    const { data, error } = await supabase.from("quiz_submissions").insert([
+      {
         user_id: submission.user_id,
         session_id: submission.session_id,
         quiz_responses: submission.quiz_responses,
-        scoring_result: submission.scoring_result
-      }]);
+        scoring_result: submission.scoring_result,
+      },
+    ]);
 
     if (error) {
-      console.error('Supabase quiz submission error:', error);
+      console.error("Supabase quiz submission error:", error);
       return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Database quiz submission error:', error);
-    return { success: false, error: 'Failed to save quiz submission' };
+    console.error("Database quiz submission error:", error);
+    return { success: false, error: "Failed to save quiz submission" };
   }
 }

@@ -76,6 +76,46 @@ const productDatabase: Record<string, ProductInfo> = {
     sustainability_indicators: ["Solar Powered", "Recyclable", "Energy Efficient"],
     confidence: 0.87,
   },
+  "567890123456": {
+    name: "Tangfastics",
+    brand: "Haribo",
+    category: "food",
+    barcode: "567890123456",
+    sustainability_indicators: ["Palm Oil Free", "Natural Colors", "Recyclable Packaging"],
+    confidence: 0.85,
+  },
+  "678901234567": {
+    name: "Chocolate Bar",
+    brand: "Divine",
+    category: "food",
+    barcode: "678901234567",
+    sustainability_indicators: ["Fair Trade", "Organic Cocoa", "Rainforest Alliance"],
+    confidence: 0.91,
+  },
+  "789012345679": {
+    name: "Protein Bar",
+    brand: "NutriGreen",
+    category: "food",
+    barcode: "789012345679",
+    sustainability_indicators: ["Plant-Based", "Compostable Wrapper", "Locally Sourced"],
+    confidence: 0.88,
+  },
+  "890123456780": {
+    name: "Energy Drink",
+    brand: "FreshBoost",
+    category: "beverages",
+    barcode: "890123456780",
+    sustainability_indicators: ["Organic", "Recyclable Can", "Carbon Neutral"],
+    confidence: 0.83,
+  },
+  "901234567891": {
+    name: "Instant Noodles",
+    brand: "QuickMeal",
+    category: "food",
+    barcode: "901234567891",
+    sustainability_indicators: ["Reduced Sodium", "Recyclable Cup", "Vegetarian"],
+    confidence: 0.76,
+  },
 };
 
 export function getProductInfo(barcode: string): ProductInfo | null {
@@ -119,7 +159,9 @@ export function generateSustainabilityData(productInfo: ProductInfo): Sustainabi
 function generateIngredients(category: string): string[] {
   switch (category) {
     case "food":
-      return ["Organic ingredients", "No preservatives", "Natural flavoring"];
+      return ["Organic ingredients", "Natural flavoring", "Sustainable palm oil"];
+    case "beverages":
+      return ["Natural extracts", "Organic cane sugar", "Recyclable packaging"];
     case "personal_care":
       return ["Natural materials", "Biodegradable components", "No harmful chemicals"];
     case "household":
@@ -152,8 +194,30 @@ export function getSustainabilityAlternatives(barcode: string): Array<{ name: st
 }
 
 // Generate a random barcode for mock scanning
-export function generateRandomBarcode(): string {
+export function generateRandomBarcode(preferredCategory?: string): string {
   const barcodes = Object.keys(productDatabase);
+  
+  // If a preferred category is specified, try to find items in that category first
+  if (preferredCategory) {
+    const categoryBarcodes = barcodes.filter(barcode => 
+      productDatabase[barcode].category === preferredCategory
+    );
+    if (categoryBarcodes.length > 0) {
+      return categoryBarcodes[Math.floor(Math.random() * categoryBarcodes.length)];
+    }
+  }
+  
+  // For food-related contexts, prioritize food and beverage items
+  const foodBarcodes = barcodes.filter(barcode => 
+    ['food', 'beverages'].includes(productDatabase[barcode].category)
+  );
+  
+  // 70% chance to return food items if available
+  if (foodBarcodes.length > 0 && Math.random() < 0.7) {
+    return foodBarcodes[Math.floor(Math.random() * foodBarcodes.length)];
+  }
+  
+  // Fall back to any random item
   return barcodes[Math.floor(Math.random() * barcodes.length)];
 }
 

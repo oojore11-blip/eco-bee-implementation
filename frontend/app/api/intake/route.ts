@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     // Validate environment configuration
     const envValidation = validateServerEnvironment();
-    
+
     if (!envValidation.isValid) {
       console.warn(`Environment validation failed: ${envValidation.message}`);
       // Still provide functionality even without full API configuration
@@ -32,7 +32,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         scoring_result: scoringResult,
-        message: "Quiz processed successfully (limited functionality - API keys not configured)",
+        message:
+          "Quiz processed successfully (limited functionality - API keys not configured)",
         warning: envValidation.message,
       });
     }
@@ -50,15 +51,15 @@ export async function POST(request: NextRequest) {
           scoring_result: scoringResult,
         });
       } catch (dbError) {
-        console.error('Database save error:', dbError);
+        console.error("Database save error:", dbError);
         // Continue even if database save fails
       }
     }
 
-    console.log('Quiz processed successfully:', { 
-      session_id, 
-      score: scoringResult.composite, 
-      grade: scoringResult.grade 
+    console.log("Quiz processed successfully:", {
+      session_id,
+      score: scoringResult.composite,
+      grade: scoringResult.grade,
     });
 
     return NextResponse.json({

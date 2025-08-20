@@ -73,13 +73,21 @@ export default function Home() {
     setSessionId(generateSessionId());
   }, []);
 
-  const handleBarcodeDetected = (barcode: string, productInfo: any, fullResult?: any) => {
-    console.log('📱 Barcode detected in main app:', { barcode, productInfo, fullResult });
+  const handleBarcodeDetected = (
+    barcode: string,
+    productInfo: any,
+    fullResult?: any
+  ) => {
+    console.log("📱 Barcode detected in main app:", {
+      barcode,
+      productInfo,
+      fullResult,
+    });
     setBarcodeResult(fullResult || { barcode, productInfo });
-    
+
     // Don't close the scanner immediately - let users see the results
     // The scanner component will handle showing the results and user can close manually
-    
+
     // Optional: Show a success notification
     if (fullResult?.product_info?.name) {
       console.log(`✅ Product scanned: ${fullResult.product_info.name}`);
