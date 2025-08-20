@@ -76,14 +76,13 @@ export default function Home() {
   const handleBarcodeDetected = (barcode: string, productInfo: any, fullResult?: any) => {
     console.log('📱 Barcode detected in main app:', { barcode, productInfo, fullResult });
     setBarcodeResult(fullResult || { barcode, productInfo });
-    // For now, just close the scanner. We could add a results view later
-    setAppState("welcome");
     
-    // Show a simple alert with the product info
+    // Don't close the scanner immediately - let users see the results
+    // The scanner component will handle showing the results and user can close manually
+    
+    // Optional: Show a success notification
     if (fullResult?.product_info?.name) {
-      alert(`Product found: ${fullResult.product_info.name}\nBarcode: ${barcode}`);
-    } else {
-      alert(`Barcode scanned: ${barcode}`);
+      console.log(`✅ Product scanned: ${fullResult.product_info.name}`);
     }
   };
 

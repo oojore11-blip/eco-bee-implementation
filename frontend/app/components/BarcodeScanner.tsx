@@ -196,7 +196,16 @@ export default function BarcodeScanner({
 
       const result: BarcodeResult = await response.json();
       console.log('✅ BarcodeScanner received result:', result);
+      console.log('🔍 Result structure check:', {
+        success: result.success,
+        detected: result.detected,
+        barcode: result.barcode,
+        hasProductInfo: !!result.product_info,
+        hasSustainability: !!result.sustainability
+      });
+      
       setResult(result);
+      console.log('📊 Result state set, component should re-render now');
 
       if (result.success && result.barcode) {
         console.log('🎯 Success! Calling onBarcodeDetected with:', {
@@ -231,6 +240,16 @@ export default function BarcodeScanner({
       fileInputRef.current.value = "";
     }
   };
+
+  // Debug logging for result state
+  if (result) {
+    console.log('🎨 BarcodeScanner render with result:', { 
+      success: result.success, 
+      detected: result.detected,
+      hasProductInfo: !!(result.product_info || result.product_details),
+      hasSustainability: !!result.sustainability
+    });
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
