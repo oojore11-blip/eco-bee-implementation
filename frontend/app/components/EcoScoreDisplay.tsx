@@ -79,6 +79,11 @@ const BOUNDARY_ICONS = {
   },
 };
 
+// Visual constants for the score ring
+const RING_SIZE_PX = 144; // overall rendered size in pixels
+const RING_RADIUS = 45; // matches the SVG viewBox coordinate system (0-100)
+const RING_STROKE = 8; // stroke thickness
+
 const getGradeColor = (grade: string) => {
   switch (grade) {
     case "A+":
@@ -126,8 +131,17 @@ export default function EcoScoreDisplay({
     ...BOUNDARY_ICONS[key as keyof typeof BOUNDARY_ICONS],
   }));
 
+  const displayScore = Math.round(100 - scoringResult.composite);
+  const getOverlayFontSize = (value: number) => {
+    const pixelsPerUnit = RING_SIZE_PX / 100;
+    const innerDiameterPx = 2 * (RING_RADIUS - RING_STROKE / 2) * pixelsPerUnit;
+    if (value >= 100) return Math.floor(innerDiameterPx * 0.42); // 3 digits
+    if (value >= 10) return Math.floor(innerDiameterPx * 0.5); // 2 digits
+    return Math.floor(innerDiameterPx * 0.6); // 1 digit
+  };
+
   const createRadialScore = (score: number) => {
-    const circumference = 2 * Math.PI * 35; // radius of 35 to match the circle
+    const circumference = 2 * Math.PI * RING_RADIUS;
     const strokeDasharray = circumference;
     const strokeDashoffset = circumference - (score / 100) * circumference;
 
@@ -172,22 +186,22 @@ export default function EcoScoreDisplay({
         <div className="glass overflow-hidden relative">
           {/* Fixed Floating Score Circle - Top Right */}
           <div className="absolute top-4 right-4 z-10 glass-card-inner rounded-full p-2">
-            <div className="relative" style={{ width: 128, height: 128 }}>
-              <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100" width="128" height="128">
+            <div className="relative" style={{ width: RING_SIZE_PX, height: RING_SIZE_PX }}>
+              <svg className="w-36 h-36 transform -rotate-90" viewBox="0 0 100 100" width={RING_SIZE_PX} height={RING_SIZE_PX}>
                 {/* Background circle */}
                 <circle
                   cx="50"
                   cy="50"
-                  r="35"
+                  r={RING_RADIUS}
                   stroke="rgba(71, 85, 105, 0.3)"
-                  strokeWidth="6"
+                  strokeWidth={RING_STROKE}
                   fill="none"
                 />
                 {/* Score circle */}
                 <circle
                   cx="50"
                   cy="50"
-                  r="35"
+                  r={RING_RADIUS}
                   stroke={
                     scoringResult.composite <= 30
                       ? "#10b981"
@@ -195,7 +209,7 @@ export default function EcoScoreDisplay({
                       ? "#f59e0b"
                       : "#ef4444"
                   }
-                  strokeWidth="6"
+                  strokeWidth={RING_STROKE}
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray={
@@ -208,22 +222,23 @@ export default function EcoScoreDisplay({
               className="transition-all duration-1000"
             />
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center flex-col">
+          <div className="absolute inset-0 flex items-center justify-center">
             <div
-              className={`text-sm font-bold ${getScoreColor(
+              className={`font-extrabold ${getScoreColor(
                 scoringResult.composite
               )}`}
+              style={{ fontSize: getOverlayFontSize(displayScore), lineHeight: 1, whiteSpace: "nowrap" }}
             >
-              {Math.round(100 - scoringResult.composite)}
-            </div>
-            <div
-              className={`text-xs font-bold px-1 py-0.5 rounded-full ${getGradeColor(
-                scoringResult.grade
-              )}`}
-            >
-              {scoringResult.grade}
+              {displayScore}
             </div>
           </div>
+        </div>
+        <div
+          className={`mt-1 text-xs font-bold px-2 py-0.5 rounded-full text-center ${getGradeColor(
+            scoringResult.grade
+          )}`}
+        >
+          {scoringResult.grade}
         </div>
       </div>
 
