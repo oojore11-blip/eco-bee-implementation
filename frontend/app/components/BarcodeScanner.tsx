@@ -115,7 +115,6 @@ export default function BarcodeScanner({
   const captureImage = useCallback(async () => {
     if (!videoRef.current || !canvasRef.current) return;
 
-    setLoading(true);
     const canvas = canvasRef.current;
     const video = videoRef.current;
 
@@ -133,12 +132,8 @@ export default function BarcodeScanner({
     canvas.toBlob(
       async (blob) => {
         if (!blob) return;
-
-        try {
-          await scanImage(blob);
-        } finally {
-          setLoading(false);
-        }
+        console.log("Camera captured image blob:", blob.size, "bytes");
+        await scanImage(blob);
       },
       "image/jpeg",
       0.8
@@ -150,17 +145,14 @@ export default function BarcodeScanner({
       const file = event.target.files?.[0];
       if (!file) return;
 
-      setLoading(true);
-      try {
-        await scanImage(file);
-      } finally {
-        setLoading(false);
-      }
+      console.log("File selected for barcode scanning:", file.name, file.size);
+      await scanImage(file);
     },
     []
   );
 
   const scanImage = async (imageBlob: Blob) => {
+    setLoading(true);
     console.log('🔍 Starting barcode scan with blob:', imageBlob);
     try {
       // Convert blob to base64 for API
@@ -227,6 +219,9 @@ export default function BarcodeScanner({
         detected: false,
         error: "Failed to scan barcode. Please try again.",
       });
+    } finally {
+      setLoading(false);
+      console.log('🏁 Barcode scan process completed');
     }
   };
 
