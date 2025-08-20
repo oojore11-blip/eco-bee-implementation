@@ -162,27 +162,38 @@ export default function BarcodeScanner({
 
   const scanImage = async (imageBlob: Blob) => {
     try {
-      const formData = new FormData();
-      formData.append("image", imageBlob);
-      formData.append("product_type", productType);
-
-      const response = await fetch(getApiUrl("/api/scan-barcode"), {
-        method: "POST",
-        body: formData,
-      });
-
-      const result: BarcodeResult = await response.json();
-      console.log("BarcodeScanner received result:", result);
-      setResult(result);
-
-      if (result.success && result.barcode) {
-        console.log("Calling onBarcodeDetected with:", {
-          barcode: result.barcode,
-          productInfo: result.product_info,
-          fullResult: result,
+      // Convert blob to base64 for API
+      const reader = new FileReader();
+      reader.readAsDataURL(imageBlob);
+      
+      reader.onload = async () => {
+        const base64Data = reader.result as string;
+        
+        const response = await fetch(getApiUrl("/api/scan-barcode"), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image_data: base64Data,
+            camera_input: true,
+            product_type: productType,
+          }),
         });
-        onBarcodeDetected(result.barcode, result.product_info, result);
-      }
+
+        const result: BarcodeResult = await response.json();
+        console.log("BarcodeScanner received result:", result);
+        setResult(result);
+
+        if (result.success && result.barcode) {
+          console.log("Calling onBarcodeDetected with:", {
+            barcode: result.barcode,
+            productInfo: result.product_info,
+            fullResult: result,
+          });
+          onBarcodeDetected(result.barcode, result.product_info, result);
+        }
+      };
     } catch (error) {
       console.error("Error scanning barcode:", error);
       setResult({

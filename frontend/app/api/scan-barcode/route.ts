@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { envConfig, validateEnvironment } from "../../config/env";
+import { serverEnvConfig, validateServerEnvironment } from "../../config/env";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { image_data, camera_input } = body;
+    const { image_data, camera_input, product_type } = body;
 
     // Validate environment configuration
-    const envValidation = validateEnvironment();
+    const envValidation = validateServerEnvironment();
     
     if (!envValidation.isValid) {
       return NextResponse.json({

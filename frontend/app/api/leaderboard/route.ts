@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { envConfig } from "../../config/env";
+import { serverEnvConfig } from "../../config/env";
 
 export async function GET(request: NextRequest) {
   try {
     // For now, return mock leaderboard data
-    // Later, you can integrate with Supabase to get real data
+    // Later, you can integrate with Supabase to get real data using serverEnvConfig.supabaseUrl and serverEnvConfig.supabaseKey
     
     const mockLeaderboard = [
       {

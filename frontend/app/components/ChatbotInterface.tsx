@@ -151,6 +151,7 @@ What area would you like to focus on first?`;
         body: JSON.stringify({
           message: text.trim(),
           context: context,
+          user_id: "web-user-" + Date.now(), // Add required user_id field
         }),
       });
 
