@@ -132,12 +132,11 @@ export default function EcoScoreDisplay({
   }));
 
   const displayScore = Math.round(100 - scoringResult.composite);
-  const getOverlayFontSize = (value: number) => {
-    const pixelsPerUnit = RING_SIZE_PX / 100;
-    const innerDiameterPx = 2 * (RING_RADIUS - RING_STROKE / 2) * pixelsPerUnit;
-    if (value >= 100) return Math.floor(innerDiameterPx * 0.42); // 3 digits
-    if (value >= 10) return Math.floor(innerDiameterPx * 0.5); // 2 digits
-    return Math.floor(innerDiameterPx * 0.6); // 1 digit
+  const getSvgFontSize = (value: number) => {
+    // ViewBox is 0..100. Choose font sizes that fit within inner diameter.
+    if (value >= 100) return 20; // 3 digits
+    if (value >= 10) return 24; // 2 digits
+    return 28; // 1 digit
   };
 
   const createRadialScore = (score: number) => {
@@ -221,17 +220,21 @@ export default function EcoScoreDisplay({
               }
               className="transition-all duration-1000"
             />
+            {/* Centered score text inside SVG */}
+            <g transform="rotate(90, 50, 50)">
+              <text
+                x="50"
+                y="50"
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill="#ffffff"
+                fontWeight="800"
+                fontSize={getSvgFontSize(displayScore)}
+              >
+                {displayScore}
+              </text>
+            </g>
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div
-              className={`font-extrabold ${getScoreColor(
-                scoringResult.composite
-              )}`}
-              style={{ fontSize: getOverlayFontSize(displayScore), lineHeight: 1, whiteSpace: "nowrap" }}
-            >
-              {displayScore}
-            </div>
-          </div>
         </div>
         <div
           className={`mt-1 text-xs font-bold px-2 py-0.5 rounded-full text-center ${getGradeColor(
